@@ -1,0 +1,14 @@
+from rest_framework.filters import BaseFilterBackend
+from django.db.models.query_utils import Q
+
+
+class AllFieldsFilterBackend(BaseFilterBackend):
+    def filter_queryset(self, request, queryset, view):
+        filter = Q()
+        
+        for key in request.query_params.keys():
+            values = request.query_params.getlist(key)
+            if key in [field.name for field in view.queryset.model._meta.fields]:
+                filter &= Q( **{ key + '__in': values })
+        
+        return queryset.filter(filter)
