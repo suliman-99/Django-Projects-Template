@@ -15,7 +15,7 @@ User = get_user_model()
 @SeederRegistry.register
 class SuperUserSeeder(seeders.CSVFileSerializerSeeder):
     serializer_class = SuperUserSeederSerializer
-    csv_file_path = 'seeder/seeders/SuperUser.csv'
+    csv_file_path = 'seeder/data/SuperUser.csv'
     priority = 0
     id = 'SuperUserSeeder'
     just_debug = True
