@@ -22,6 +22,7 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, Spec
 
 
 app_patterns = [
+    path('logger/', include('logger.urls')),
     path('content-type/', include('content_type.urls')),
     path('users/', include('users.urls')),
     path('translation/', include('translation.urls')),

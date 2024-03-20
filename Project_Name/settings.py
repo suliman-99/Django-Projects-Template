@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'fcm_django',
     'drf_spectacular',
 
+    'logger',
     'content_type',
     'notification',
     'translation',
@@ -69,6 +70,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'common.middlewares.ResponseCoordinatorMiddleware', # ResponseCoordinator
+    'logger.middlewares.LogMiddleware', # LogMiddleware (has to be the last middlewarre (just add the log records to the database))
 ]
 
 ROOT_URLCONF = 'Project_Name.urls'
