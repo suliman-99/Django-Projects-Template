@@ -8,6 +8,6 @@ class NotificationFilter(filters.FilterSet):
         fields = {
             'user': ['exact'],
             'is_viewed': ['exact'],
-            'title': ['contains'],
-            'body': ['contains'],
+            'title': ['contains', 'icontains'],
+            'body': ['contains', 'icontains'],
         }
