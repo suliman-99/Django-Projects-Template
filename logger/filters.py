@@ -9,6 +9,7 @@ class LogFilter(filters.FilterSet):
             'type': ['exact'],
             'user': ['exact'],
             'status_code': ['exact', 'lt', 'lte', 'gt', 'gte'],
+            'method': ['exact'],
             'url': ['exact', 'contains', 'icontains'],
             'created_at': ['lt', 'lte', 'gt', 'gte'],
         }

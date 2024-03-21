@@ -1,5 +1,4 @@
 from logger.models import Log
-from rest_framework.request import Request
 
 
 def get_user_from_request(request):
@@ -13,6 +12,13 @@ def get_request_type(request):
     return Log.TYPE_OTHERS
 
 
+def get_response_body(response):
+    response_data = getattr(response, 'data', None)
+    if isinstance(response_data, bytes):
+        response_data = { 'bytes': response_data.decode() }
+    return str(response_data)
+
+
 class LogMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
@@ -23,12 +29,13 @@ class LogMiddleware:
             type=get_request_type(request),
             user=get_user_from_request(request),
             status_code=response.status_code,
+            method=request.method,
             url=request.path,
             query_params=request.GET,
             request_headers=dict(request.headers),
             request_body=request.POST,
             response_headers=dict(response.headers),
-            response_body=getattr(response, 'data', None),
+            response_body=get_response_body(response),
         )
         return response
  

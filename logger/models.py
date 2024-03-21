@@ -18,6 +18,7 @@ class Log(models.Model):
     type = models.CharField(choices=TYPE_CHOICES, max_length=10)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='logs')
     status_code = models.PositiveIntegerField()
+    method = models.CharField(max_length=10)
     url = models.TextField()
     query_params = models.JSONField()
     request_headers = models.JSONField()

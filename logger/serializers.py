@@ -10,6 +10,7 @@ class LogSerializer(serializers.ModelSerializer):
             'type',
             'user',
             'status_code',
+            'method',
             'url',
             'query_params',
             'request_headers',
