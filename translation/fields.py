@@ -122,20 +122,20 @@ class UpdateTranslationField(TranslationField):
         ret['in_table'] = getattr(instance, self.get_custom_source())
         return ret
 
-    def run_custom_validation(self):
+    def run_custom_validation(self, translations, action):
         """
         - validate that all language_code are sent
         - validate that all language_code sent in the data are valid
         """
-        serializer = self.parent
-        translations = serializer.initial_data.get(self.field_name, {})
+        if not translations:
+            if self.allow_null or action == 'partial_update':
+                return
+            raise exceptions.ValidationError({
+                self.field_name: f'{self.field_name} is required.'
+            })
         
         if not isinstance(translations, dict):
             raise exceptions.ValidationError({self.field_name: f'{self.field_name} must be key-value json.'})
-        
-        if not translations:
-            if serializer.context['view'].action == 'partial_update' or self.allow_null:
-                return
         
         active_languages_codes = get_active_languages_codes()
         needed_language_codes = []
@@ -160,8 +160,16 @@ class UpdateTranslationField(TranslationField):
             raise exceptions.ValidationError({
                 self.field_name: ', '.join(error_messages) + f' in {self.field_name}',
             })
+        
+    def save_in_table_value(self, instance, translations):
+        in_table = translations.get('in_table')
+        if not in_table:
+            in_table = translations.get(get_default_language_code())
+        if in_table:
+            setattr(instance, self.get_custom_source(), in_table)
+            instance.save()
     
-    def save_translations(self, instance):
+    def save_translations(self, instance, translations):
         """
         save all the tanslation values in `Translation` Table using `set_translations_for_object_field()` 
         
@@ -169,12 +177,6 @@ class UpdateTranslationField(TranslationField):
         so, validation will remove the data and will not return it in the validated_data
         so, get the data from the `serializer.inital_date` to save it
         """
-        serializer = self.parent
-        translations = serializer.initial_data.get(self.field_name)
         set_translations_for_object_field(instance, self.get_custom_source(), translations)
-        in_table = translations.get('in_table')
-        if not in_table:
-            in_table = translations.get(get_default_language_code())
-        setattr(instance, self.get_custom_source(), in_table)
-        instance.save()
+        self.save_in_table_value(instance, translations)
     
