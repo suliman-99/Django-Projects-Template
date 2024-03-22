@@ -4,9 +4,12 @@ from rest_framework import serializers
 
 class AuditSerializer(serializers.ModelSerializer):
     def get_user(self):
-        user = self.context['request'].user
+        try:
+            user = self.context['request'].user
+        except:
+            return None
         if not user or not user.is_authenticated:
-            user = None
+            return None
         return user
 
     def create(self, validated_data):
