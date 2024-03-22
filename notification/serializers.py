@@ -7,7 +7,7 @@ from translation.functions import fall_down_from_model
 from translation.plugs import TranslationSerializerPlug
 from translation.fields import UpdateTranslationField
 from notification.models import Notification
-from notification.methods import push_notifications
+from notification.methods import push_notifications, push_translated_notifications
 
 
 User = get_user_model()
@@ -18,15 +18,20 @@ class FilterSerializer(serializers.Serializer):
     is_excepting = serializers.BooleanField(required=True)
 
 
-class NotificationSerializer(serializers.Serializer):
-    title = serializers.CharField(required=True)
-    body = serializers.CharField(required=True)
+class NotificationSerializer(TranslationSerializerPlug, serializers.Serializer):
+    title = serializers.CharField()
+    body = serializers.CharField()
     image = serializers.CharField(required=True, allow_null=True)
 
 
-class SendNotificationSerializer(serializers.Serializer):
+class TranslatedNotificationSerializer(TranslationSerializerPlug, serializers.Serializer):
+    title = UpdateTranslationField()
+    body = UpdateTranslationField()
+    image = serializers.CharField(required=True, allow_null=True)
+
+
+class BaseSendNotificationSerializer(serializers.Serializer):
     filter = FilterSerializer()
-    notification = NotificationSerializer()
     save = serializers.BooleanField()
 
     def get_users(self, filter_data):
@@ -42,10 +47,19 @@ class SendNotificationSerializer(serializers.Serializer):
         return User.objects.filter(filter)
 
     def create(self, validated_data):
-        filter_data = validated_data['filter']
-        notification_data = validated_data['notification']
-        save = validated_data['save']
-        users = self.get_users(filter_data)
+        users = self.get_users(validated_data['filter'])
+        self.send_notifications(users, validated_data['save'])
+        return True
+    
+    def to_representation(self, instance):
+        return {}
+
+
+class SendNotificationSerializer(BaseSendNotificationSerializer):
+    notification = NotificationSerializer()
+    
+    def send_notifications(self, users, save):
+        notification_data = self.validated_data['notification']
         push_notifications(
             users, 
             title=notification_data.pop('title'),
@@ -54,10 +68,21 @@ class SendNotificationSerializer(serializers.Serializer):
             save=save,
             **notification_data
         )
-        return True
+
+
+class SendTranslatedNotificationSerializer(BaseSendNotificationSerializer):
+    notification = TranslatedNotificationSerializer()
     
-    def to_representation(self, instance):
-        return {}
+    def send_notifications(self, users, save):
+        notification_data = self.fields['notification'].translation_data
+        push_translated_notifications(
+            users, 
+            title=notification_data.pop('title'),
+            body=notification_data.pop('body'),
+            image=notification_data.pop('image'),
+            save=save,
+            **notification_data
+        )
 
 
 class GetNotificationSerializer(AuditSerializer):

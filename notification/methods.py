@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from rest_framework import serializers
 from firebase_admin import messaging
 from fcm_django.models import FCMDevice
 from common.audit.serializers import AuditSerializer
@@ -12,7 +13,7 @@ User = get_user_model()
 
 
 def clean_notification_data(data):
-    cleaned_data = []
+    cleaned_data = {}
     for key, value in data.items():
         if value is not None:
             cleaned_data[key] = str(value)
@@ -42,6 +43,7 @@ class CreateTranslatedNotificationSerializer(TranslationSerializerPlug, AuditSer
         model = Notification
         fields = (
             'id',
+            'user',
             'title',
             'body',
             'image',
@@ -49,6 +51,7 @@ class CreateTranslatedNotificationSerializer(TranslationSerializerPlug, AuditSer
 
     title = UpdateTranslationField()
     body = UpdateTranslationField()
+    image = serializers.CharField()
 
 
 def save_translated_notification(
@@ -59,7 +62,7 @@ def save_translated_notification(
     ):
     for user in users:
         serializer = CreateTranslatedNotificationSerializer(data={
-            'user': user,
+            'user': user.id,
             'title': title,
             'body': body,
             'image': image,

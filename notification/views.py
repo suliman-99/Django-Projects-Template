@@ -6,8 +6,9 @@ from common.permissions import IsSuperuser
 from notification.models import Notification
 from notification.filters import NotificationFilter
 from notification.serializers import (
-    SendNotificationSerializer, 
-    GetNotificationSerializer, 
+    SendNotificationSerializer,
+    SendTranslatedNotificationSerializer,
+    GetNotificationSerializer,
     MarkNotificationAsViewedSerializer,
     FullNotificationSerializer,
 )
@@ -28,9 +29,19 @@ class NotificationViewSet(viewsets.ModelViewSet):
     )
     
     def get_serializer_class(self):
-        if self.request.method == 'POST':
+        if self.action == 'send_notifications':
             return SendNotificationSerializer
+        if self.action == 'send_translated_notifications':
+            return SendTranslatedNotificationSerializer
         return FullNotificationSerializer
+    
+    @action(detail=False, methods=['post'], url_path='send-notifications')
+    def send_notifications(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+    
+    @action(detail=False, methods=['post'], url_path='send-translated-notifications')
+    def send_translated_notifications(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
 
 
 class MyNotificationViewSet(viewsets.ModelViewSet):
@@ -58,11 +69,11 @@ class MyNotificationViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         return self.serializer_class_action_map[self.action]
     
-    @action(detail=True, methods=['put'])
+    @action(detail=True, methods=['put'], url_path='mark-as-viewed')
     def mark_as_viewed(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
     
-    @action(detail=False, methods=['put'])
+    @action(detail=False, methods=['put'], url_path='mark-all-as-viewed')
     def mark_all_as_viewed(self, request, *args, **kwargs):
         self.get_queryset().filter(is_viewed=False).update(is_viewed=True)
         return Response({})
