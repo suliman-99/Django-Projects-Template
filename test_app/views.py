@@ -6,7 +6,12 @@ from rest_framework.response import Response
 from common.permissions import IsSuperuser
 from users.verification.email import _send_verification_code_email_message
 from users.verification.phone_number import _send_verification_code_phone_number_message, check_verification_code_phone_number
-from test_app.serializers import TestTimeModelSerializer
+from test_app.models import TestTranslationModel
+from test_app.serializers import (
+    TestUpdateTranslationSerializer, 
+    TestGetTranslationSerializer, 
+    TestTimeModelSerializer,
+)
 
 
 class TestSendEmailVerificationCode(CreateAPIView):
@@ -53,6 +58,18 @@ class TestTime(RetrieveAPIView):
             'timezone_localtime_timezone_now': str(timezone_localtime_timezone_now),
             'is_equal': is_equal,
         })
+    
+
+class TestUpdateTranslationModelViewSet(ModelViewSet):
+    permission_classes = (IsSuperuser, )
+    serializer_class = TestUpdateTranslationSerializer
+    queryset = TestTranslationModel.objects.all()
+    
+
+class TestGetTranslationModelViewSet(ModelViewSet):
+    http_method_names = ['get']
+    serializer_class = TestGetTranslationSerializer
+    queryset = TestTranslationModel.objects.all()
     
 
 class TestTimeModelViewSet(ModelViewSet):
