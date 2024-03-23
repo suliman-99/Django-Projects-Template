@@ -1,9 +1,7 @@
-from rest_framework import routers
-from translation.views import LanguageViewSet
+from django.urls import path
+from translation.views import LanguageListAPIView
 
 
-router = routers.DefaultRouter()
-
-router.register('languages', LanguageViewSet, 'languages')
-
-urlpatterns = router.urls
+urlpatterns = [
+    path('languages/', LanguageListAPIView.as_view(), name='languages'),
+]

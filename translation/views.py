@@ -1,10 +1,8 @@
-from rest_framework.viewsets import ModelViewSet
-from common.permissions import IsSuperuserOrReadOnly
-from translation.models import Language
-from translation.serializers import LanguageSerializer
+from rest_framework.generics import ListAPIView
+from rest_framework.response import Response
+from translation.methods import get_languages
 
 
-class LanguageViewSet(ModelViewSet):
-    permission_classes = (IsSuperuserOrReadOnly, )
-    serializer_class = LanguageSerializer
-    queryset = Language.objects.all()
+class LanguageListAPIView(ListAPIView):
+    def list(self, request, *args, **kwargs):
+        return Response(get_languages())

@@ -1,17 +1,8 @@
 import json
+from django.utils.translation import get_language
 from rest_framework import serializers, exceptions
 from common.dicts import DefaultDict
-from translation.cache import (
-    get_active_languages_codes,
-    get_default_language_code,
-)
-
-
-def get_language_code_from_request(request):
-    language_code = request.headers.get('Accept-Language')
-    if not language_code:
-        language_code = get_default_language_code()
-    return language_code
+from translation.methods import get_languages_codes, get_default_language_code
 
 
 def fallback_to_base(data):
@@ -83,7 +74,7 @@ class GetTranslationField(TranslationField):
     
     def to_representation(self, value):
         data = super().to_representation(value)
-        language_code = get_language_code_from_request(self.context['request'])
+        language_code = get_language()
         return data[language_code]
 
 
@@ -98,7 +89,7 @@ class UpdateTranslationField(TranslationField):
             "language_code2": "value2"
             "language_code3": "value3"
         }
-        it will return the object for all active_languages_codes
+        it will return the object for all languages_codes
         if there is no translation value related to the any of the languages
         then, it will return the value depending on the fallback
      
@@ -128,17 +119,18 @@ class UpdateTranslationField(TranslationField):
         if not isinstance(translation_data, dict):
             raise exceptions.ValidationError({self.field_name: f'{self.field_name} must be key-value json.'})
         
-        active_languages_codes = get_active_languages_codes()
+        languages_codes = get_languages_codes()
         required_language_codes = []
         invalid_language_codes = []
         
         if not self.allow_partial and not (self.base_is_enough and translation_data.get('base')):
-            for language_code in active_languages_codes:
+            for language_code in languages_codes:
                 if not translation_data.get(language_code):
                     required_language_codes.append(language_code)
 
+        accepted_keys = ['base', *languages_codes]
         for key in translation_data.keys():
-            if key not in ['base', *active_languages_codes]:
+            if key not in accepted_keys:
                 invalid_language_codes.append(key)
 
         error_messages = []
@@ -163,7 +155,7 @@ class UpdateTranslationField(TranslationField):
         data = super().to_representation(value)
         new_data = {
             language_code: data[language_code]
-            for language_code in get_active_languages_codes()
+            for language_code in get_languages_codes()
         }
         new_data['base'] = data.get('base', '')
         return new_data
