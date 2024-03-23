@@ -2,7 +2,7 @@ from django.contrib.auth.hashers import make_password
 from django.utils import timezone
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from common.code_generation import generate_code
-from translation.functions import get_active_languages_codes, get_default_language_code
+from translation.cache import get_active_languages_codes, get_default_language_code
 from users.models import User
 
 
