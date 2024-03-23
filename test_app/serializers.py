@@ -13,7 +13,10 @@ class TestUpdateTranslationSerializer(serializers.ModelSerializer):
             'translated_text',
         )
 
-    translated_text = UpdateTranslationField()
+    translated_text = UpdateTranslationField(
+        required_languages=['ar'],
+        accepted_languages=['ar', 'en'],
+    )
 
 
 class TestGetTranslationSerializer(serializers.ModelSerializer):
