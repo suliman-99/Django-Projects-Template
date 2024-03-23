@@ -2,7 +2,7 @@ from django.contrib.auth.hashers import make_password
 from django.utils import timezone
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from common.code_generation import generate_code
-from translation.cache import get_active_languages_codes, get_default_language_code
+from translation.methods import get_languages_codes
 from users.models import User
 
 
@@ -39,4 +39,5 @@ def verify_phone_number(user: User):
 
 
 def get_user_language_code(user: User):
-    return user.language_code if user.language_code in get_active_languages_codes() else get_default_language_code()
+    languages_codes = get_languages_codes()
+    return user.language_code if user.language_code in languages_codes else languages_codes[0]

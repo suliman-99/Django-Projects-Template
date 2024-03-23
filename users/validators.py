@@ -2,7 +2,7 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.hashers import check_password
 from rest_framework.exceptions import ValidationError
-from translation.cache import get_active_languages_codes
+from translation.methods import get_languages_codes
 from users.common_error_messages import INACTIVE_USER
 from users.models import User
 
@@ -13,7 +13,7 @@ def validate_user(user):
     
 
 def validate_language_code(language_code):
-    if language_code not in get_active_languages_codes:
+    if language_code not in get_languages_codes:
         raise ValidationError('Invalid Language Code.')
     
 
