@@ -14,16 +14,16 @@ def get_language_code_from_request(request):
     return language_code
 
 
-def fall_down_to_base(data):
+def fallback_to_base(data):
     return data.get('base', '')
 
 
-def fall_down_to_default_language_then_to_empty(data):
+def fallback_to_default_language_then_to_empty(data):
     return data.get(get_default_language_code(), '')
 
 
-def fall_down_to_default_language_then_to_base(data):
-    return data.get(get_default_language_code(), fall_down_to_base(data))
+def fallback_to_default_language_then_to_base(data):
+    return data.get(get_default_language_code(), fallback_to_base(data))
 
 
 def coordinate_translation_data(data):
@@ -49,21 +49,21 @@ class TranslationField(serializers.JSONField):
 
     def __init__(self, **kwargs):
         """
-        - `fall_down` attribute is a method takes (obj, field_name) or a value specify what will be returned if the a translation value is not available
+        - `fallback` attribute is a method takes (obj, field_name) or a value specify what will be returned if the a translation value is not available
         """
-        self.fall_down = kwargs.pop('fall_down', '')
+        self.fallback = kwargs.pop('fallback', '')
         super().__init__(**kwargs)
 
-    def get_fall_down_value(self, data):
-        if not callable(self.fall_down):
-            return self.fall_down
-        return self.fall_down(data)
+    def get_fallback_value(self, data):
+        if not callable(self.fallback):
+            return self.fallback
+        return self.fallback(data)
     
     def to_representation(self, value):
         data = super().to_representation(value)
         if not isinstance(data, dict):
             data = {}
-        return DefaultDict(self.get_fall_down_value(data), data)
+        return DefaultDict(self.get_fallback_value(data), data)
 
 
 class GetTranslationField(TranslationField):
@@ -75,7 +75,7 @@ class GetTranslationField(TranslationField):
         `Accept-Language` values must be `Language.code` field values.  
 
         if there is no translation value related to the `Accept-Language` specified
-        then, it will return the value depending on the fall_down 
+        then, it will return the value depending on the fallback 
     """
     def __init__(self, **kwargs):
         kwargs['read_only'] = True
@@ -100,7 +100,7 @@ class UpdateTranslationField(TranslationField):
         }
         it will return the object for all active_languages_codes
         if there is no translation value related to the any of the languages
-        then, it will return the value depending on the fall_down
+        then, it will return the value depending on the fallback
      
     SET:
         it accept the data in this format:
