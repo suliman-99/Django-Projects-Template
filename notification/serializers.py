@@ -2,12 +2,13 @@ from django.db.models.query_utils import Q
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from common.audit.serializers import AuditSerializer
-from translation.fields import GetTranslationField
-from translation.functions import fall_down_from_model
-from translation.plugs import TranslationSerializerPlug
-from translation.fields import UpdateTranslationField
+from translation.fields import (
+    GetTranslationField, 
+    UpdateTranslationField,
+    fall_down_to_base
+)
 from notification.models import Notification
-from notification.methods import push_notifications, push_translated_notifications
+from notification.methods import push_notifications
 
 
 User = get_user_model()
@@ -18,21 +19,10 @@ class FilterSerializer(serializers.Serializer):
     is_excepting = serializers.BooleanField(required=True)
 
 
-class NotificationSerializer(TranslationSerializerPlug, serializers.Serializer):
-    title = serializers.CharField()
-    body = serializers.CharField()
-    image = serializers.CharField(required=True, allow_null=True)
-
-
-class TranslatedNotificationSerializer(TranslationSerializerPlug, serializers.Serializer):
-    title = UpdateTranslationField()
-    body = UpdateTranslationField()
-    image = serializers.CharField(required=True, allow_null=True)
-
-
-class BaseSendNotificationSerializer(serializers.Serializer):
+class SendNotificationSerializer(serializers.Serializer):
     filter = FilterSerializer()
     save = serializers.BooleanField()
+    notification = serializers.JSONField()
 
     def get_users(self, filter_data):
         user_ids = filter_data.get('user_ids')
@@ -47,42 +37,15 @@ class BaseSendNotificationSerializer(serializers.Serializer):
         return User.objects.filter(filter)
 
     def create(self, validated_data):
-        users = self.get_users(validated_data['filter'])
-        self.send_notifications(users, validated_data['save'])
+        push_notifications(
+            users=self.get_users(validated_data['filter']),
+            save=validated_data['save'],
+            **validated_data['notification'],
+        )
         return True
     
     def to_representation(self, instance):
         return {}
-
-
-class SendNotificationSerializer(BaseSendNotificationSerializer):
-    notification = NotificationSerializer()
-    
-    def send_notifications(self, users, save):
-        notification_data = self.validated_data['notification']
-        push_notifications(
-            users, 
-            title=notification_data.pop('title'),
-            body=notification_data.pop('body'),
-            image=notification_data.pop('image'),
-            save=save,
-            **notification_data
-        )
-
-
-class SendTranslatedNotificationSerializer(BaseSendNotificationSerializer):
-    notification = TranslatedNotificationSerializer()
-    
-    def send_notifications(self, users, save):
-        notification_data = self.fields['notification'].translation_data
-        push_translated_notifications(
-            users, 
-            title=notification_data.pop('title'),
-            body=notification_data.pop('body'),
-            image=notification_data.pop('image'),
-            save=save,
-            **notification_data
-        )
 
 
 class GetNotificationSerializer(AuditSerializer):
@@ -97,8 +60,8 @@ class GetNotificationSerializer(AuditSerializer):
             'created_at',
         )
 
-    title = GetTranslationField(fall_down=fall_down_from_model)
-    body = GetTranslationField(fall_down=fall_down_from_model)
+    title = GetTranslationField(fall_down=fall_down_to_base)
+    body = GetTranslationField(fall_down=fall_down_to_base)
 
 
 class MarkNotificationAsViewedSerializer(AuditSerializer):
@@ -115,7 +78,7 @@ class MarkNotificationAsViewedSerializer(AuditSerializer):
         return GetNotificationSerializer(instance, context=self.context).data
     
 
-class FullNotificationSerializer(TranslationSerializerPlug, AuditSerializer):
+class FullNotificationSerializer(AuditSerializer):
     class Meta:
         model = Notification
         fields = (

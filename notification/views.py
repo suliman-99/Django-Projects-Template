@@ -7,7 +7,6 @@ from notification.models import Notification
 from notification.filters import NotificationFilter
 from notification.serializers import (
     SendNotificationSerializer,
-    SendTranslatedNotificationSerializer,
     GetNotificationSerializer,
     MarkNotificationAsViewedSerializer,
     FullNotificationSerializer,
@@ -31,16 +30,10 @@ class NotificationViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == 'send_notifications':
             return SendNotificationSerializer
-        if self.action == 'send_translated_notifications':
-            return SendTranslatedNotificationSerializer
         return FullNotificationSerializer
     
     @action(detail=False, methods=['post'], url_path='send-notifications')
     def send_notifications(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
-    
-    @action(detail=False, methods=['post'], url_path='send-translated-notifications')
-    def send_translated_notifications(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
 
 
