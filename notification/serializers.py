@@ -5,7 +5,7 @@ from common.audit.serializers import AuditSerializer
 from translation.fields import (
     GetTranslationField, 
     UpdateTranslationField,
-    fall_down_to_base
+    fallback_to_base
 )
 from notification.models import Notification
 from notification.methods import push_notifications
@@ -60,8 +60,8 @@ class GetNotificationSerializer(AuditSerializer):
             'created_at',
         )
 
-    title = GetTranslationField(fall_down=fall_down_to_base)
-    body = GetTranslationField(fall_down=fall_down_to_base)
+    title = GetTranslationField(fallback=fallback_to_base)
+    body = GetTranslationField(fallback=fallback_to_base)
 
 
 class MarkNotificationAsViewedSerializer(AuditSerializer):
