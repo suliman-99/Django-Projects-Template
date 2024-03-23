@@ -54,7 +54,6 @@ INSTALLED_APPS = [
     'logger',
     'content_type',
     'notification',
-    'translation',
     'seeder',
     'test_app',
 ]
