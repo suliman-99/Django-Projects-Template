@@ -15,15 +15,15 @@ def get_language_code_from_request(request):
 
 
 def fall_down_to_base(data):
-    return data.get('base')
-
-
-def fall_down_to_default_language_then_to_base(data):
-    return data.get(get_default_language_code(), fall_down_to_base(data))
+    return data.get('base', '')
 
 
 def fall_down_to_default_language_then_to_empty(data):
     return data.get(get_default_language_code(), '')
+
+
+def fall_down_to_default_language_then_to_base(data):
+    return data.get(get_default_language_code(), fall_down_to_base(data))
 
 
 def coordinate_translation_data(data):
@@ -31,7 +31,7 @@ def coordinate_translation_data(data):
             try:
                 data = json.loads(data)
             except:
-                pass
+                data = {'base': data}
         return data
 
 
@@ -49,10 +49,8 @@ class TranslationField(serializers.JSONField):
 
     def __init__(self, **kwargs):
         """
-        - `allow_partial` attribute which make the field accept the value even that not all languages are specified if `allow_partial`=True
         - `fall_down` attribute is a method takes (obj, field_name) or a value specify what will be returned if the a translation value is not available
         """
-        self.allow_partial = kwargs.pop('allow_partial', False)
         self.fall_down = kwargs.pop('fall_down', '')
         super().__init__(**kwargs)
 
@@ -116,6 +114,16 @@ class UpdateTranslationField(TranslationField):
             ...
         }
     """
+
+    def __init__(self, **kwargs):
+        """
+        - `allow_partial` attribute which make the field accept the value even that not all languages are specified if `allow_partial`=True
+        - `base_is_enough` attribute is a flag that specify if the value of `base` key is enough in validations
+        """
+        self.allow_partial = kwargs.pop('allow_partial', False)
+        self.base_is_enough = kwargs.pop('base_is_enough', False)
+        super().__init__(**kwargs)
+    
     def validate_translation_data(self, translation_data):
         if not isinstance(translation_data, dict):
             raise exceptions.ValidationError({self.field_name: f'{self.field_name} must be key-value json.'})
@@ -124,7 +132,7 @@ class UpdateTranslationField(TranslationField):
         required_language_codes = []
         invalid_language_codes = []
         
-        if not self.allow_partial:
+        if not self.allow_partial and not (self.base_is_enough and translation_data.get('base')):
             for language_code in active_languages_codes:
                 if not translation_data.get(language_code):
                     required_language_codes.append(language_code)
