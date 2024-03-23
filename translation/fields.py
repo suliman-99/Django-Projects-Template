@@ -27,7 +27,7 @@ def coordinate_translation_data(data):
 
 
 def ensure_base_value(translation_data):
-    translation_data.setdefault('base', translation_data.get(get_default_language_code()))
+    translation_data.setdefault('base', translation_data.get(get_default_language_code(), ''))
 
 
 class TranslationField(serializers.JSONField):
@@ -113,33 +113,38 @@ class UpdateTranslationField(TranslationField):
         """
         self.allow_partial = kwargs.pop('allow_partial', False)
         self.base_is_enough = kwargs.pop('base_is_enough', False)
+        self.required_languages = kwargs.pop('required_languages', get_languages_codes())
+        self.accepted_languages = kwargs.pop('accepted_languages', get_languages_codes())
+        if not all(o in self.accepted_languages for o in self.required_languages):
+            raise Exception('required_languages must be a part of the accepted_languages')
         super().__init__(**kwargs)
     
     def validate_translation_data(self, translation_data):
         if not isinstance(translation_data, dict):
             raise exceptions.ValidationError({self.field_name: f'{self.field_name} must be key-value json.'})
         
-        languages_codes = get_languages_codes()
-        required_language_codes = []
+        missed_language_codes = []
         invalid_language_codes = []
         
         if not self.allow_partial and not (self.base_is_enough and translation_data.get('base')):
-            for language_code in languages_codes:
+            for language_code in self.required_languages:
                 if not translation_data.get(language_code):
-                    required_language_codes.append(language_code)
+                    missed_language_codes.append(language_code)
 
-        accepted_keys = ['base', *languages_codes]
+        accepted_keys = ['base', *self.accepted_languages]
         for key in translation_data.keys():
             if key not in accepted_keys:
                 invalid_language_codes.append(key)
 
         error_messages = []
-        if required_language_codes:
-            error_messages.append(f'required language codes: {required_language_codes}')
+        if missed_language_codes:
+            error_messages.append(f'missed language codes: {missed_language_codes}')
         if invalid_language_codes:
             error_messages.append(f'invalid language codes: {invalid_language_codes}')
 
         if error_messages:
+            error_messages.append(f'required_language: {self.required_languages}')
+            error_messages.append(f'accepted_languages: {self.accepted_languages}')
             raise exceptions.ValidationError({
                 self.field_name: ', '.join(error_messages) + f' in {self.field_name}',
             })
