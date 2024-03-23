@@ -1,11 +1,10 @@
 from django.utils import timezone
 from rest_framework import serializers
-from translation.plugs import TranslationSerializerPlug
 from translation.fields import UpdateTranslationField, GetTranslationField
 from test_app.models import TestTranslationModel, TestTimeModel
 
 
-class TestUpdateTranslationSerializer(TranslationSerializerPlug, serializers.ModelSerializer):
+class TestUpdateTranslationSerializer(serializers.ModelSerializer):
     class Meta:
         model = TestTranslationModel
         fields = (

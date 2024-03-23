@@ -3,7 +3,7 @@ from django.db import models
 
 class TestTranslationModel(models.Model):
     text = models.CharField(max_length=100)
-    translated_text = models.CharField(max_length=100)
+    translated_text = models.JSONField()
 
 
 class TestTimeModel(models.Model):
