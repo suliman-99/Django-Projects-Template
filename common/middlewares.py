@@ -17,7 +17,7 @@ class ResponseCoordinatorMiddleware:
 
         if not TEMPLATE_FLAG in response_data:
             if 200 <= response.status_code < 300:
-                if response_data.pop(PAGINATION_FLAG, None):
+                if isinstance(response_data, dict) and response_data.pop(PAGINATION_FLAG, None):
                     new_response_data = success_response({})
                     new_response_data.update(response_data)
                     
