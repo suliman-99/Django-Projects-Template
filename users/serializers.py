@@ -3,14 +3,13 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.hashers import check_password, make_password
 from django.shortcuts import get_object_or_404
-from django.utils import timezone
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError, AuthenticationFailed
 from rest_framework_simplejwt.tokens import RefreshToken
 from common.audit.serializers import AuditSerializer
 from users.models import User
 from users.validators import validate_user, validate_user_code
-from users.methods import add_tokens_to_response, verify_email, verify_phone_number
+from users.methods import get_tokens, login, verify_email, verify_phone_number
 from users.response_serializer import AuthUserSerializer
 from users.common_error_messages import NOT_REGISTERED_USER, INCORRECT_LOGIN_DATA, INVALID_CODE
 from users.verification.email import send_verification_code_email_message_to_user
@@ -19,6 +18,7 @@ from users.verification.phone_number import (
     check_verification_code_phone_number_to_user,
 )
 
+# ---------------------------------------- SignUp ----------------------------------------
 
 class SignUpSerializer(AuditSerializer):
     class Meta:
@@ -34,8 +34,29 @@ class SignUpSerializer(AuditSerializer):
     def validate(self, attrs):
         validated_data = super().validate(attrs)
         validate_password(validated_data['password'])
-        user = User.objects.create_user(**validated_data)
-        user.send_verification_code_email_message()
+        if not validated_data['email'] and not validated_data['phone_number']:
+            raise ValidationError('Email or Phone Number are required.')
+        user:User = User.objects.create_user(**validated_data)
+        if user.email:
+            send_verification_code_email_message_to_user(user)
+        if user.phone_number:
+            send_verification_code_phone_number_message_to_user(user)
+        return AuthUserSerializer(user, context=self.context).data
+
+# ---------------------------------------- Email ----------------------------------------
+
+class ChangeEmailSerializer(AuditSerializer):
+    class Meta:
+        model = User
+        fields = ('email', )
+
+    def update(self, user, validated_data):
+        validated_data['email_verified'] = False
+        ret = super().update(user, validated_data)
+        send_verification_code_email_message_to_user(user)
+        return ret
+    
+    def to_representation(self, user):
         return AuthUserSerializer(user, context=self.context).data
 
 
@@ -60,8 +81,8 @@ class VerifyEmailSerializer(serializers.Serializer):
         validate_user(user)
         validate_user_code(user, 'email_code', validated_data['email_code'])        
         ret = AuthUserSerializer(user, context=self.context).data
-        ret['reset_password_code'] = verify_email(user)
-        return add_tokens_to_response(ret, user)
+        ret.update(verify_email(user))
+        return ret
 
 
 class EmailLogInSerializer(serializers.Serializer):
@@ -81,12 +102,26 @@ class EmailLogInSerializer(serializers.Serializer):
         if not check_password(validated_data['password'], user.password):
             raise ValidationError(INCORRECT_LOGIN_DATA)
 
-        user.last_login = timezone.now()
-        user.save()
         ret = AuthUserSerializer(user, context=self.context).data
         if user.email_verified:
-            ret = add_tokens_to_response(ret, user)
+            ret.update(login(user))
         return ret
+
+# ---------------------------------------- PhoneNumber ----------------------------------------
+
+class ChangePhoneNumberSerializer(AuditSerializer):
+    class Meta:
+        model = User
+        fields = ('phone_number', )
+
+    def update(self, user, validated_data):
+        validated_data['phone_number_verified'] = False
+        ret = super().update(user, validated_data)
+        send_verification_code_phone_number_message_to_user(user)
+        return ret
+    
+    def to_representation(self, user):
+        return AuthUserSerializer(user, context=self.context).data
 
 
 class SendPhoneNumberVerificationCodeSerializer(serializers.Serializer):
@@ -110,12 +145,10 @@ class VerifyPhoneNumberSerializer(serializers.Serializer):
         validate_user(user)
         if not check_verification_code_phone_number_to_user(user, validated_data['code']):
             raise ValidationError(INVALID_CODE)
-        user.phone_number_verified = True
-        user.last_login = timezone.now()
-        user.save()
+        
         ret = AuthUserSerializer(user, context=self.context).data
-        ret['reset_password_code'] = verify_phone_number(user)
-        return add_tokens_to_response(ret, user)
+        ret.update(verify_phone_number(user))
+        return ret
 
 
 class PhoneNumberLogInSerializer(serializers.Serializer):
@@ -135,13 +168,12 @@ class PhoneNumberLogInSerializer(serializers.Serializer):
         if not check_password(validated_data['password'], user.password):
             raise ValidationError(INCORRECT_LOGIN_DATA)
 
-        user.last_login = timezone.now()
-        user.save()
         ret = AuthUserSerializer(user, context=self.context).data
         if user.phone_number_verified:
-            ret = add_tokens_to_response(ret, user)
+            ret.update(login(user))
         return ret
   
+# ---------------------------------------- Common ----------------------------------------
 
 class RefreshSerializer(serializers.Serializer):
     refresh = serializers.CharField()
@@ -159,10 +191,9 @@ class RefreshSerializer(serializers.Serializer):
         
         validate_user(user)
         
-        user.last_refresh = timezone.now()
-        user.save()
         ret = AuthUserSerializer(user, context=self.context).data
-        return add_tokens_to_response(ret, user)
+        ret.update(get_tokens(user))
+        return ret
 
 
 class ChagnePasswordSerializer(serializers.Serializer):
@@ -198,36 +229,7 @@ class ReSetPasswordSerializer(serializers.Serializer):
         user.save()
         return AuthUserSerializer(user, context=self.context).data
 
-
-class ChangeEmailSerializer(AuditSerializer):
-    class Meta:
-        model = User
-        fields = ('email', )
-
-    def update(self, user, validated_data):
-        validated_data['email_verified'] = False
-        ret = super().update(user, validated_data)
-        send_verification_code_email_message_to_user(user)
-        return ret
-    
-    def to_representation(self, user):
-        return AuthUserSerializer(user, context=self.context).data
-
-
-class ChangePhoneNumberSerializer(AuditSerializer):
-    class Meta:
-        model = User
-        fields = ('phone_number', )
-
-    def update(self, user, validated_data):
-        validated_data['phone_number_verified'] = False
-        ret = super().update(user, validated_data)
-        send_verification_code_phone_number_message_to_user(user)
-        return ret
-    
-    def to_representation(self, user):
-        return AuthUserSerializer(user, context=self.context).data
-
+# ---------------------------------------- Profile ----------------------------------------
 
 class ProfileSerializer(AuditSerializer):
     class Meta:
@@ -242,6 +244,7 @@ class ProfileSerializer(AuditSerializer):
     def to_representation(self, user):
         return AuthUserSerializer(user, context=self.context).data
 
+# ---------------------------------------- Superuser ----------------------------------------
 
 class FullUserSerializer(AuditSerializer):
     class Meta:
@@ -287,3 +290,5 @@ class FullUserSerializer(AuditSerializer):
             'deleted_at': { 'read_only': True },
             'deleted_by': { 'read_only': True },
         }
+
+# ---------------------------------------- End ----------------------------------------

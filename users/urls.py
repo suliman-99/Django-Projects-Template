@@ -38,5 +38,6 @@ urlpatterns = router.urls + [
     path('refresh/', RefreshView.as_view(), name='refresh'),
     path('change-password/', ChangePasswordView.as_view(), name='change-password'),
     path('reset-password/', ReSetPasswordView.as_view(), name='reset-password'),
+    
     path('profile/', ProfileView.as_view(), name='profile'),
 ]

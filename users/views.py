@@ -22,10 +22,12 @@ from users.serializers import (
     FullUserSerializer,
 )
 
+# ---------------------------------------- SignUp ----------------------------------------
 
 class SignUpView(TokenObtainPairView):
     serializer_class = SignUpSerializer
 
+# ---------------------------------------- Email ----------------------------------------
 
 class ChangeEmailView(UpdateAPIView):
     serializer_class = ChangeEmailSerializer
@@ -45,6 +47,7 @@ class VerifyEmailView(TokenObtainPairView):
 class EmailLogInView(TokenObtainPairView):
     serializer_class = EmailLogInSerializer
 
+# ---------------------------------------- PhoneNumber ----------------------------------------
 
 class ChangePhoneNumberView(UpdateAPIView):
     serializer_class = ChangePhoneNumberSerializer
@@ -64,6 +67,7 @@ class VerifyPhoneNumberView(TokenObtainPairView):
 class PhoneNumberLogInView(TokenObtainPairView):
     serializer_class = PhoneNumberLogInSerializer
 
+# ---------------------------------------- Common ----------------------------------------
 
 class RefreshView(TokenObtainPairView):
     serializer_class = RefreshSerializer
@@ -86,6 +90,7 @@ class ReSetPasswordView(TokenObtainPairView):
     def get_object(self):
         return self.request.user
 
+# ---------------------------------------- Profile ----------------------------------------
 
 class ProfileView(RetrieveAPIView, UpdateAPIView):
     permission_classes = (IsAuthenticated, )
@@ -94,8 +99,11 @@ class ProfileView(RetrieveAPIView, UpdateAPIView):
     def get_object(self):
         return self.request.user
 
+# ---------------------------------------- Superuser ----------------------------------------
 
 class UserViewSet(ModelViewSet):
     permission_classes = (IsSuperuser, )
     serializer_class = FullUserSerializer
     queryset = User.objects.all()
+
+# ---------------------------------------- End ----------------------------------------
