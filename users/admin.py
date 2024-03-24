@@ -12,12 +12,26 @@ admin.site.login_form = CustomAuthenticationForm
 class UserAdmin(admin.ModelAdmin):
     list_display = (
         'id',
-        'email',
-        'email_code_is_valid',
-        'phone_number',
-        'first_name',
-        'last_name',
         'is_active',
         'is_staff',
         'is_superuser',
+        'date_joined',
+        'first_login',
+        'last_login',
+        'last_refresh',
+
+        'email',
+        'email_code_time',
+        'email_code_is_valid',
+        'email_verified',
+
+        'phone_number',
+        'phone_number_verified',
+
+        'reset_password_code_time',
+        'reset_password_code_is_valid',
+
+        'first_name',
+        'last_name',
+        'language_code',
     )

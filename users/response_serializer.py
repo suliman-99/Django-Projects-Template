@@ -10,8 +10,9 @@ class AuthUserSerializer(AuditSerializer):
             'is_active',
             'is_staff',
             'is_superuser',
-            'last_login',
             'date_joined',
+            'first_login',
+            'last_login',
             'last_refresh',
 
             'email',

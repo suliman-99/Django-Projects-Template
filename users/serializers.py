@@ -251,24 +251,24 @@ class FullUserSerializer(AuditSerializer):
         model = User
         fields = (
             'id',
-            'username',
             'is_active',
             'is_staff',
             'is_superuser',
-            'last_login',
             'date_joined',
+            'first_login',
+            'last_login',
             'last_refresh',
 
             'email',
-            'email_code',
             'email_code_time',
+            'email_code_is_valid',
             'email_verified',
 
             'phone_number',
             'phone_number_verified',
 
-            'reset_password_code',
             'reset_password_code_time',
+            'reset_password_code_is_valid',
 
             'first_name',
             'last_name',
