@@ -8,6 +8,7 @@ from test_app.views import (
     TestUpdateTranslationModelViewSet,
     TestGetTranslationModelViewSet,
     TestTimeModelViewSet,
+    ExceptionView,
 )
 
 router = routers.DefaultRouter()
@@ -21,4 +22,5 @@ urlpatterns = router.urls + [
     path('test-send-phone-number-verification-code/', TestSendPhoneNumberVerificationCode.as_view(), name='test-send-phone-number-verification-code'),
     path('test-verify-phone-number/', TestVerifyPhoneNumber.as_view(), name='test-verify-phone-number'),
     path('test-time/', TestTime.as_view(), name='test-time'),
+    path('exception/', ExceptionView.as_view(), name='exception'),
 ]

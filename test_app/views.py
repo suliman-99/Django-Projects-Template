@@ -75,3 +75,10 @@ class TestGetTranslationModelViewSet(ModelViewSet):
 class TestTimeModelViewSet(ModelViewSet):
     permission_classes = (IsSuperuser, )
     serializer_class = TestTimeModelSerializer
+
+
+class ExceptionView(CreateAPIView):
+    permission_classes = (IsSuperuser, )
+    
+    def create(self, request, *args, **kwargs):
+        raise Exception('This is just an exception for testing.')
