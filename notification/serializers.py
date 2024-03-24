@@ -2,6 +2,7 @@ from django.db.models.query_utils import Q
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from common.audit.serializers import AuditSerializer
+from common.audit.variables import audit_fields, audit_read_only_kwargs
 from translation.fields import (
     GetTranslationField, 
     UpdateTranslationField,
@@ -89,22 +90,11 @@ class FullNotificationSerializer(AuditSerializer):
             'title',
             'body',
             'image',
-
-            'created_at',
-            'created_by',
-            'updated_at',
-            'updated_by',
-            'deleted_at',
-            'deleted_by',
-            'is_deleted',
+            
+            *audit_fields,
         )
         extra_kwargs = {
-            'created_at': { 'read_only': True },
-            'created_by': { 'read_only': True },
-            'updated_at': { 'read_only': True },
-            'updated_by': { 'read_only': True },
-            'deleted_at': { 'read_only': True },
-            'deleted_by': { 'read_only': True },
+            **audit_read_only_kwargs
         }
 
     title = UpdateTranslationField()

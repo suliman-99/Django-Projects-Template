@@ -7,6 +7,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError, AuthenticationFailed
 from rest_framework_simplejwt.tokens import RefreshToken
 from common.audit.serializers import AuditSerializer
+from common.audit.variables import audit_fields, audit_read_only_kwargs
 from users.models import User
 from users.validators import validate_user, validate_user_code
 from users.methods import get_tokens, login, verify_email, verify_phone_number
@@ -273,22 +274,11 @@ class FullUserSerializer(AuditSerializer):
             'first_name',
             'last_name',
             'language_code',
-
-            'created_at',
-            'created_by',
-            'updated_at',
-            'updated_by',
-            'deleted_at',
-            'deleted_by',
-            'is_deleted',
+            
+            *audit_fields,
         )
         extra_kwargs = {
-            'created_at': { 'read_only': True },
-            'created_by': { 'read_only': True },
-            'updated_at': { 'read_only': True },
-            'updated_by': { 'read_only': True },
-            'deleted_at': { 'read_only': True },
-            'deleted_by': { 'read_only': True },
+            **audit_read_only_kwargs
         }
 
 # ---------------------------------------- End ----------------------------------------
