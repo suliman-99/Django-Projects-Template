@@ -7,15 +7,14 @@ class LogSerializer(serializers.ModelSerializer):
         model = Log
         fields = (
             'id',
+            'created_at',
+            'level',
             'type',
             'user',
-            'status_code',
             'method',
             'url',
+            'message',
+            'html_message',
             'query_params',
             'request_headers',
-            'request_body',
-            'response_headers',
-            'response_body',
-            'created_at',
         )

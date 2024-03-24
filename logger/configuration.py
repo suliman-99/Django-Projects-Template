@@ -60,6 +60,12 @@ LOGGING_DICT = {
             'filters': ['require_debug_false'],
             'include_html': True,
         },
+        'database': {
+            'class': 'logger.handlers.DataBaseHandler',
+            'level': 'DEBUG',
+            'filters': ['require_debug_false'],
+            'include_html': True,
+        },
     },
     'loggers': {
         '': {
@@ -70,6 +76,7 @@ LOGGING_DICT = {
                 'error', 
                 'critical', 
                 'mail_admins',
+                'database',
             ],
         },
     },

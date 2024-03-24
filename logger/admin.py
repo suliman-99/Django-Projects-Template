@@ -8,36 +8,41 @@ from logger.models import Log
 class LogAdmin(admin.ModelAdmin):
     list_display = (
         'id',
+        'created_at',
+        'level',
         'type',
         'user',
-        'status_code',
         'method',
         'url',
-        'created_at',
+        'message',
         'query_params',
         'request_headers',
-        # 'request_body',
-        'response_headers',
-        # 'response_body',
     )
     list_filter = (
+        'created_at',
+        'level',
         'type',
         'user',
-        'status_code',
         'method',
         'url',
-        'created_at',
+        'message',
     )
     search_fields = (
         'user',
-        'method',
         'url',
+        'message',
         'query_params',
         'request_headers',
-        'request_body',
-        'response_headers',
-        'response_body',
+    )
+    ordering = (
+        '-created_at', 
     )
     formfield_overrides = {
         models.JSONField: {'widget': AdminTextareaWidget },
     }
+    # readonly_fields = (
+    #     'view_html_messsage',
+    # )
+
+    # def view_html_messsage(self, obj):
+    #     return mark_safe(obj.html_message)
