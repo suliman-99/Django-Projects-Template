@@ -2,6 +2,7 @@ import uuid
 from django.db import models
 from django.contrib.auth.models import AbstractUser, UserManager as BaseUserManager
 from django.contrib.auth.hashers import make_password
+from phonenumber_field.modelfields import PhoneNumberField
 from common.audit.models import AuditModel
 
 
@@ -30,7 +31,7 @@ class User(AbstractUser, AuditModel):
     email_code_is_valid = models.BooleanField(default=False)
     email_verified = models.BooleanField(default=False)
 
-    phone_number = models.CharField(max_length=50, unique=True, null=True, blank=True)
+    phone_number = PhoneNumberField(unique=True, null=True, blank=True)
     phone_number_verified = models.BooleanField(default=False)
 
     reset_password_code = models.CharField(max_length=500, null=True, blank=True)

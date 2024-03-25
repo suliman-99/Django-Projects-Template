@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'dbbackup',
     'fcm_django',
     'drf_spectacular',
+    'phonenumber_field',
 
     'logger',
     'content_type',

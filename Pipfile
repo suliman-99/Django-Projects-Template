@@ -19,6 +19,7 @@ djangorestframework-simplejwt = "*"
 twilio = "*"
 drf-spectacular = "*"
 pillow = "*"
+django-phonenumber-field = {extras = ["phonenumbers"], version = "*"}
 
 [dev-packages]
 
