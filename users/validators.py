@@ -13,7 +13,7 @@ def validate_user(user):
     
 
 def validate_language_code(language_code):
-    if language_code not in get_languages_codes:
+    if language_code not in get_languages_codes():
         raise ValidationError('Invalid Language Code.')
     
 
