@@ -46,7 +46,7 @@ class SuperUserSeeder(seeders.CSVFileSerializerSeeder):
 #     id = 'CategorySeeder'
 #     priority = 1
 #     just_debug = True
-#     csv_file_path = 'seeder/data/CategorySeeder.csv'
+#     csv_file_path = 'seeder/data/Category.csv'
 #     serializer_class = CategorySerializer
 
 
@@ -55,5 +55,5 @@ class SuperUserSeeder(seeders.CSVFileSerializerSeeder):
 #     id = 'SubCategorySeeder'
 #     priority = 2
 #     just_debug = True
-#     csv_file_path = 'seeder/data/SubCategorySeeder.csv'
+#     csv_file_path = 'seeder/data/SubCategory.csv'
 #     serializer_class = SubCategorySerializer
