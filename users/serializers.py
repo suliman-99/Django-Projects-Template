@@ -254,6 +254,8 @@ class FullUserSerializer(AuditSerializer):
         model = User
         fields = (
             'id',
+
+            'password',
             
             'is_active',
             'is_staff',
@@ -286,6 +288,7 @@ class FullUserSerializer(AuditSerializer):
             *audit_fields,
         )
         extra_kwargs = {
+            'password': { 'write_only': True, 'allow_null': True },
             'date_joined': { 'read_only': True },
             'first_login': { 'read_only': True },
             'last_login': { 'read_only': True },
@@ -296,6 +299,13 @@ class FullUserSerializer(AuditSerializer):
             'reset_password_code_is_valid': { 'read_only': True },
             **audit_read_only_kwargs
         }
+    
+    def validate(self, attrs):
+        validated_data = super().validate(attrs)
+        password = validated_data.pop('password', None)
+        if password:
+            validated_data['password'] = make_password(password)
+        return validated_data
 
 # ---------------------------------------- Permission ----------------------------------------
 
