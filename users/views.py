@@ -4,7 +4,7 @@ from rest_framework.generics import RetrieveAPIView, UpdateAPIView, ListAPIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated
-from common.permissions import ModelPermissions, IsAdmin
+from common.permissions import ModelPermissions, IsAdmin, IsSuperuser
 from users.models import User
 from users.filters import PermissionFilter
 from users.serializers import (
@@ -103,11 +103,11 @@ class ProfileView(RetrieveAPIView, UpdateAPIView):
     def get_object(self):
         return self.request.user
 
-# ---------------------------------------- Superuser ----------------------------------------
+# ---------------------------------------- User ----------------------------------------
 
 class UserViewSet(ModelViewSet):
     permission_models = User
-    permission_classes = (IsAdmin, ModelPermissions)
+    permission_classes = ( (IsSuperuser | (IsAdmin & ModelPermissions)), )
     serializer_class = FullUserSerializer
     queryset = User.objects.all() \
         .prefetch_related('user_permissions') \
@@ -124,7 +124,7 @@ class ProfilePermissionListAPIView(ListAPIView):
 
 class GroupViewSet(ModelViewSet):
     permission_models = Group
-    permission_classes = (IsAdmin, ModelPermissions)
+    permission_classes = ( (IsSuperuser | (IsAdmin & ModelPermissions)), )
     serializer_class = GroupSerializer
     queryset = Group.objects.all() \
         .prefetch_related('permissions') \

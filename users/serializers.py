@@ -247,7 +247,7 @@ class ProfileSerializer(AuditSerializer):
     def to_representation(self, user):
         return AuthUserSerializer(user, context=self.context).data
 
-# ---------------------------------------- Superuser ----------------------------------------
+# ---------------------------------------- User ----------------------------------------
 
 class FullUserSerializer(AuditSerializer):
     class Meta:
