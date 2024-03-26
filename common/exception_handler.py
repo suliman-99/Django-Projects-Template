@@ -1,5 +1,7 @@
 from rest_framework import status
 from rest_framework.views import exception_handler
+from django.core.exceptions import ValidationError as DjangoValidationError
+from rest_framework.exceptions import ValidationError as DRFValidationError
 
 
 def message_coordinator(message, field_name):
@@ -32,6 +34,10 @@ def get_exception_message(exc):
 
 
 def custom_exception_handler(exc, context):
+    # change the DjangoValidationError to DRFValidationError while i am in API not in django admin
+    if isinstance(exc, DjangoValidationError):
+        exc = DRFValidationError(detail=exc.message_dict)
+
     response = exception_handler(exc, context)
 
     if response:
