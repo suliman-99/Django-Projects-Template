@@ -10,14 +10,16 @@ admin.site.login_form = CustomAuthenticationForm
 class UserAdmin(admin.ModelAdmin):
     list_display = (
         'id',
+        
         'is_active',
         'is_staff',
         'is_superuser',
+        'is_admin',
+
         'date_joined',
         'first_login',
         'last_login',
         'last_refresh',
-        'is_admin',
 
         'email',
         'email_code_time',

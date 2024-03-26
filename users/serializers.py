@@ -254,14 +254,16 @@ class FullUserSerializer(AuditSerializer):
         model = User
         fields = (
             'id',
+            
             'is_active',
             'is_staff',
             'is_superuser',
+            'is_admin',
+
             'date_joined',
             'first_login',
             'last_login',
             'last_refresh',
-            'is_admin',
 
             'email',
             'email_code_time',
@@ -284,6 +286,14 @@ class FullUserSerializer(AuditSerializer):
             *audit_fields,
         )
         extra_kwargs = {
+            'date_joined': { 'read_only': True },
+            'first_login': { 'read_only': True },
+            'last_login': { 'read_only': True },
+            'last_refresh': { 'read_only': True },
+            'email_code_time': { 'read_only': True },
+            'email_code_is_valid': { 'read_only': True },
+            'reset_password_code_time': { 'read_only': True },
+            'reset_password_code_is_valid': { 'read_only': True },
             **audit_read_only_kwargs
         }
 

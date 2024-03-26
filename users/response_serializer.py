@@ -7,14 +7,16 @@ class AuthUserSerializer(AuditSerializer):
         model = User
         fields = (
             'id',
+            
             'is_active',
             'is_staff',
             'is_superuser',
+            'is_admin',
+
             'date_joined',
             'first_login',
             'last_login',
             'last_refresh',
-            'is_admin',
 
             'email',
             'email_verified',
