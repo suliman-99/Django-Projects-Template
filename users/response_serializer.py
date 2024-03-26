@@ -14,6 +14,7 @@ class AuthUserSerializer(AuditSerializer):
             'first_login',
             'last_login',
             'last_refresh',
+            'is_admin',
 
             'email',
             'email_verified',
@@ -24,4 +25,7 @@ class AuthUserSerializer(AuditSerializer):
             'first_name',
             'last_name',
             'language_code',
+
+            'user_permissions',
+            'groups',
         )  

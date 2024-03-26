@@ -19,6 +19,7 @@ class UserAdmin(admin.ModelAdmin):
         'first_login',
         'last_login',
         'last_refresh',
+        'is_admin',
 
         'email',
         'email_code_time',

@@ -15,11 +15,14 @@ from users.views import (
     ReSetPasswordView,
     ProfileView,
     UserViewSet,
+    ProfilePermissionListAPIView,
+    GroupViewSet,
 )
 
 
 router = routers.DefaultRouter()
 
+router.register('groups', GroupViewSet, 'groups')
 router.register('users', UserViewSet, 'users')
 
 urlpatterns = router.urls + [
@@ -40,4 +43,6 @@ urlpatterns = router.urls + [
     path('reset-password/', ReSetPasswordView.as_view(), name='reset-password'),
     
     path('profile/', ProfileView.as_view(), name='profile'),
+
+    path('permissions/', ProfilePermissionListAPIView.as_view(), name='permissions'),
 ]

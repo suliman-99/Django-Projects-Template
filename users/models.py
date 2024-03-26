@@ -42,6 +42,8 @@ class User(AbstractUser, AuditModel):
     last_name = models.CharField(max_length=150, null=True, blank=True)
     language_code = models.CharField(max_length=10, null=True, blank=True)
 
+    is_admin = models.BooleanField(default=False)
+
     objects = UserManager()
     USERNAME_FIELD = 'id'
     REQUIRED_FIELDS = []

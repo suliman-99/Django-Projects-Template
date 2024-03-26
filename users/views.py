@@ -1,10 +1,12 @@
+from django.contrib.auth.models import Permission, Group
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.generics import RetrieveAPIView, UpdateAPIView
+from rest_framework.generics import RetrieveAPIView, UpdateAPIView, ListAPIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated
-from common.permissions import IsSuperuser
+from common.permissions import ModelPermissions, IsAdmin
 from users.models import User
+from users.filters import PermissionFilter
 from users.serializers import (
     SignUpSerializer,
     SendEmailVerificationCodeSerializer,
@@ -20,6 +22,8 @@ from users.serializers import (
     ChangePhoneNumberSerializer,
     ProfileSerializer,
     FullUserSerializer,
+    PermissionSerializer,
+    GroupSerializer,
 )
 
 # ---------------------------------------- SignUp ----------------------------------------
@@ -102,8 +106,28 @@ class ProfileView(RetrieveAPIView, UpdateAPIView):
 # ---------------------------------------- Superuser ----------------------------------------
 
 class UserViewSet(ModelViewSet):
-    permission_classes = (IsSuperuser, )
+    permission_models = User
+    permission_classes = (IsAdmin, ModelPermissions)
     serializer_class = FullUserSerializer
-    queryset = User.objects.all()
+    queryset = User.objects.all() \
+        .prefetch_related('user_permissions') \
+        .prefetch_related('groups') \
 
-# ---------------------------------------- End ----------------------------------------
+# ---------------------------------------- Permission ----------------------------------------
+
+class ProfilePermissionListAPIView(ListAPIView):
+    serializer_class = PermissionSerializer
+    queryset = Permission.objects.prefetch_related('content_type')
+    filterset_class = PermissionFilter
+
+# ---------------------------------------- Group ----------------------------------------
+
+class GroupViewSet(ModelViewSet):
+    permission_models = Group
+    permission_classes = (IsAdmin, ModelPermissions)
+    serializer_class = GroupSerializer
+    queryset = Group.objects.all() \
+        .prefetch_related('permissions') \
+        .prefetch_related('user_set') \
+            
+# ---------------------------------------- END ----------------------------------------

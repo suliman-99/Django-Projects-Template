@@ -3,11 +3,13 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.hashers import check_password, make_password
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.models import Group, Permission
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError, AuthenticationFailed
 from rest_framework_simplejwt.tokens import RefreshToken
 from common.audit.serializers import AuditSerializer
 from common.audit.variables import audit_fields, audit_read_only_kwargs
+from content_type.serializers import ContentTypeSerializer
 from users.models import User
 from users.validators import validate_user, validate_user_code
 from users.methods import get_tokens, login, verify_email, verify_phone_number
@@ -259,6 +261,7 @@ class FullUserSerializer(AuditSerializer):
             'first_login',
             'last_login',
             'last_refresh',
+            'is_admin',
 
             'email',
             'email_code_time',
@@ -274,6 +277,9 @@ class FullUserSerializer(AuditSerializer):
             'first_name',
             'last_name',
             'language_code',
+
+            'user_permissions',
+            'groups',
             
             *audit_fields,
         )
@@ -281,4 +287,35 @@ class FullUserSerializer(AuditSerializer):
             **audit_read_only_kwargs
         }
 
-# ---------------------------------------- End ----------------------------------------
+# ---------------------------------------- Permission ----------------------------------------
+
+class PermissionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Permission
+        fields = (
+            'id', 
+            'name', 
+            'codename', 
+            'full_name',
+            'content_type', 
+        )
+
+    full_name = serializers.SerializerMethodField()
+    content_type = ContentTypeSerializer()
+
+    def get_full_name(self, instance):
+        return f'{instance.content_type.app_label}.{instance.codename}'
+
+# ------------------------------------------------- Group -------------------------------------------------
+
+class GroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Group
+        fields = (
+            'id', 
+            'name', 
+            'permissions', 
+            'user_set',
+        )
+
+# ------------------------------------------------- END -------------------------------------------------
