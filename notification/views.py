@@ -2,7 +2,7 @@ from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework import permissions
 from rest_framework.response import Response
-from common.permissions import IsSuperuser
+from common.permissions import ModelPermissions, IsAdmin
 from notification.models import Notification
 from notification.filters import NotificationFilter
 from notification.serializers import (
@@ -14,7 +14,8 @@ from notification.serializers import (
 
 
 class NotificationViewSet(viewsets.ModelViewSet):
-    permission_classes = (IsSuperuser, )
+    permission_models = Notification
+    permission_classes = (IsAdmin, ModelPermissions)
     queryset = Notification.objects.all()
     filterset_class = NotificationFilter
     search_fields = (
