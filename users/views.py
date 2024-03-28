@@ -16,7 +16,7 @@ from users.serializers import (
     VerifyPhoneNumberSerializer,
     PhoneNumberLogInSerializer, 
     RefreshSerializer, 
-    ChagnePasswordSerializer, 
+    ChangePasswordSerializer, 
     ReSetPasswordSerializer,
     ChangeEmailSerializer,
     ChangePhoneNumberSerializer,
@@ -80,7 +80,7 @@ class RefreshView(TokenObtainPairView):
 class ChangePasswordView(TokenObtainPairView):
     authentication_classes = (JWTAuthentication, )
     permission_classes = (IsAuthenticated, )
-    serializer_class = ChagnePasswordSerializer
+    serializer_class = ChangePasswordSerializer
 
     def get_object(self):
         return self.request.user

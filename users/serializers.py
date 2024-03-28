@@ -199,7 +199,7 @@ class RefreshSerializer(serializers.Serializer):
         return ret
 
 
-class ChagnePasswordSerializer(serializers.Serializer):
+class ChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField()
     password = serializers.CharField()
 
