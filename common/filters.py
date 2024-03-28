@@ -12,3 +12,22 @@ class AllFieldsFilterBackend(BaseFilterBackend):
                 filter &= Q( **{ key + '__in': values })
         
         return queryset.filter(filter)
+
+
+class FilterLookupExpr:
+    EXACT = 'exact'
+    CONTAINS = 'contains'
+    ICONTAINS = 'icontains'
+    LT = 'lt'
+    LTE = 'lte'
+    GT = 'gt'
+    GTE = 'gte'
+
+    BOOLEAN = (EXACT, )
+    NUMBER = (EXACT, LT, LTE, GT, GTE)
+    STRING = (EXACT, CONTAINS, ICONTAINS)
+    DATE= (EXACT, LT, LTE, GT, GTE)
+    TIME = (EXACT, LT, LTE, GT, GTE)
+    DATETIME = (EXACT, LT, LTE, GT, GTE)
+    DURATION = (EXACT, LT, LTE, GT, GTE)
+    OTHER = (EXACT,)
