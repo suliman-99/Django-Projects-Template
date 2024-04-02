@@ -1,5 +1,7 @@
 from django.contrib import admin
-from test_app.models import TestTranslationModel, TestTimeModel
+from common.audit.admin import AuditModelAdmin
+from common.audit.variables import audit_fields
+from test_app.models import TestTranslationModel, TestTimeModel, TestDeleteModel, TestDeleteModel2
 
 
 @admin.register(TestTranslationModel)
@@ -16,4 +18,22 @@ class TestTimeModelAdmin(admin.ModelAdmin):
         'created_at', 
         'timezone_now', 
         'timezone_localtime_timezone_now',
+    )
+
+
+@admin.register(TestDeleteModel)
+class TestDeleteModelAdmin(AuditModelAdmin):
+    list_display = (
+        'text',
+        'un',
+        *audit_fields,
+    )
+
+
+@admin.register(TestDeleteModel2)
+class TestDeleteModel2Admin(AuditModelAdmin):
+    list_display = (
+        'base', 
+        'text',
+        *audit_fields,
     )
