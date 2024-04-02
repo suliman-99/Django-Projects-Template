@@ -1,7 +1,6 @@
 from django.db.models.query_utils import Q
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from common.audit.serializers import AuditSerializer
 from common.audit.variables import audit_fields, audit_read_only_kwargs
 from translation.fields import (
     GetTranslationField, 
@@ -49,7 +48,7 @@ class SendNotificationSerializer(serializers.Serializer):
         return {}
 
 
-class GetNotificationSerializer(AuditSerializer):
+class GetNotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notification
         fields = (
@@ -65,7 +64,7 @@ class GetNotificationSerializer(AuditSerializer):
     body = GetTranslationField(fallback=fallback_to_base)
 
 
-class MarkNotificationAsViewedSerializer(AuditSerializer):
+class MarkNotificationAsViewedSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notification
         fields = []
@@ -79,7 +78,7 @@ class MarkNotificationAsViewedSerializer(AuditSerializer):
         return GetNotificationSerializer(instance, context=self.context).data
     
 
-class FullNotificationSerializer(AuditSerializer):
+class FullNotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notification
         fields = (

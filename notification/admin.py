@@ -1,9 +1,11 @@
 from django.contrib import admin
+from common.audit.admin import AuditModelAdmin
+from common.audit.variables import audit_fields
 from notification.models import Notification
 
 
 @admin.register(Notification)
-class NotificationAdmin(admin.ModelAdmin):
+class NotificationAdmin(AuditModelAdmin):
     list_display = (
         'id',
 
@@ -14,5 +16,5 @@ class NotificationAdmin(admin.ModelAdmin):
         'user',
         'is_viewed',
 
-        'created_at',
+        *audit_fields,
     )
