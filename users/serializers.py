@@ -7,7 +7,6 @@ from django.contrib.auth.models import Group, Permission
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError, AuthenticationFailed
 from rest_framework_simplejwt.tokens import RefreshToken
-from common.audit.serializers import AuditSerializer
 from common.audit.variables import audit_fields, audit_read_only_kwargs
 from content_type.serializers import ContentTypeSerializer
 from users.models import User
@@ -23,7 +22,7 @@ from users.verification.phone_number import (
 
 # ---------------------------------------- SignUp ----------------------------------------
 
-class SignUpSerializer(AuditSerializer):
+class SignUpSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
@@ -48,7 +47,7 @@ class SignUpSerializer(AuditSerializer):
 
 # ---------------------------------------- Email ----------------------------------------
 
-class ChangeEmailSerializer(AuditSerializer):
+class ChangeEmailSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('email', )
@@ -112,7 +111,7 @@ class EmailLogInSerializer(serializers.Serializer):
 
 # ---------------------------------------- PhoneNumber ----------------------------------------
 
-class ChangePhoneNumberSerializer(AuditSerializer):
+class ChangePhoneNumberSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('phone_number', )
@@ -234,7 +233,7 @@ class ReSetPasswordSerializer(serializers.Serializer):
 
 # ---------------------------------------- Profile ----------------------------------------
 
-class ProfileSerializer(AuditSerializer):
+class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
@@ -249,7 +248,7 @@ class ProfileSerializer(AuditSerializer):
 
 # ---------------------------------------- User ----------------------------------------
 
-class FullUserSerializer(AuditSerializer):
+class FullUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (

@@ -1,8 +1,8 @@
-from common.audit.serializers import AuditSerializer
+from rest_framework import serializers
 from users.models import User
 
 
-class AuthUserSerializer(AuditSerializer):
+class AuthUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (

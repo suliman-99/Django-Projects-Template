@@ -1,4 +1,6 @@
 from django.contrib import admin
+from common.audit.admin import AuditModelAdmin
+from common.audit.variables import audit_fields
 from users.models import User
 from users.forms import CustomAuthenticationForm
 
@@ -7,7 +9,7 @@ admin.site.login_form = CustomAuthenticationForm
 
 
 @admin.register(User)
-class UserAdmin(admin.ModelAdmin):
+class UserAdmin(AuditModelAdmin):
     list_display = (
         'id',
         
@@ -35,4 +37,5 @@ class UserAdmin(admin.ModelAdmin):
         'first_name',
         'last_name',
         'language_code',
+        *audit_fields,
     )
