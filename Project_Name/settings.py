@@ -51,6 +51,8 @@ INSTALLED_APPS = [
     'fcm_django',
     'drf_spectacular',
     'phonenumber_field',
+    'safedelete',
+    'simple_history',
 
     'logger',
     'content_type',
@@ -69,6 +71,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'simple_history.middleware.HistoryRequestMiddleware', # Simple History
     'common.middlewares.ResponseCoordinatorMiddleware', # ResponseCoordinator
 ]
 

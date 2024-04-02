@@ -1,8 +1,8 @@
 from django.contrib.contenttypes.models import ContentType
-from common.audit.serializers import AuditSerializer
+from rest_framework import serializers
 
 
-class ContentTypeSerializer(AuditSerializer):
+class ContentTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = ContentType
         fields = (

@@ -20,6 +20,8 @@ twilio = "*"
 drf-spectacular = "*"
 pillow = "*"
 django-phonenumber-field = {extras = ["phonenumbers"], version = "*"}
+django-simple-history = "*"
+django-safedelete = "*"
 
 [dev-packages]
 
