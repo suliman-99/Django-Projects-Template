@@ -7,7 +7,6 @@ from test_app.models import Test
 class TestDeleteModelTranslationOptions(TranslationOptions):
     fields = (
         'text',
-        'new_text',
     )
 
 simple_history.register(Test)

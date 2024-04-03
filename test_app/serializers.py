@@ -1,34 +1,40 @@
 from django.utils import timezone
 from rest_framework import serializers
-from translation.fields import UpdateTranslationField, GetTranslationField
-from test_app.models import TestTranslationModel, TestTimeModel, Test, SubTest
+from translation.methods import translate, translation_field_required_kwargs
+from test_app.models import TestTimeModel, Test, SubTest
 
 
-class TestUpdateTranslationSerializer(serializers.ModelSerializer):
+class UpdateTestSerializer(serializers.ModelSerializer):
     class Meta:
-        model = TestTranslationModel
+        model = Test
+        fields = (
+            'id',
+            *translate('text'),
+            'un',
+        )
+        extra_kwargs = {
+            **translation_field_required_kwargs('text'),
+        }
+
+
+class GetTestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Test
         fields = (
             'id',
             'text',
-            'translated_text',
+            'un',
         )
 
-    translated_text = UpdateTranslationField(
-        required_languages=['ar'],
-        accepted_languages=['ar', 'en'],
-    )
 
-
-class TestGetTranslationSerializer(serializers.ModelSerializer):
+class SubTestSerializer(serializers.ModelSerializer):
     class Meta:
-        model = TestTranslationModel
+        model = SubTest
         fields = (
             'id',
             'text',
-            'translated_text',
+            'test',
         )
-
-    translated_text = GetTranslationField()
 
 
 class TestTimeModelSerializer(serializers.ModelSerializer):
@@ -48,15 +54,3 @@ class TestTimeModelSerializer(serializers.ModelSerializer):
         validated_data['timezone_now'] = timezone.now()
         validated_data['timezone_localtime_timezone_now'] = timezone.localtime(timezone.now())
         return super().create(validated_data)
-    
-
-class TestSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Test
-        fields = '__all__'
-    
-
-class SubTestSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = SubTest
-        fields = '__all__'

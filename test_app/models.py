@@ -2,14 +2,8 @@ from django.db import models
 from common.audit.models import AuditModel, HistoricalAuditModel
 
 
-class TestTranslationModel(models.Model):
-    text = models.CharField(max_length=100)
-    translated_text = models.JSONField()
-
-
 class Test(AuditModel):
-    text = models.CharField(max_length=100)
-    new_text = models.CharField(max_length=100)
+    text = models.CharField(max_length=100, null=False, blank=False)
     un = models.IntegerField()
 
     class Meta:

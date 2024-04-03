@@ -5,20 +5,18 @@ from test_app.views import (
     TestSendPhoneNumberVerificationCode,
     TestVerifyPhoneNumber,
     TestTime,
-    TestUpdateTranslationModelViewSet,
-    TestGetTranslationModelViewSet,
     TestTimeModelViewSet,
     ExceptionView,
-    TestViewSet,
+    UpdateTestViewSet,
+    GetTestViewSet,
     SubTestViewSet,
 )
 
 router = routers.DefaultRouter()
 
-router.register('test-update-translation', TestUpdateTranslationModelViewSet, 'test-update-translation')
-router.register('test-get-translation', TestGetTranslationModelViewSet, 'test-get-translation')
 router.register('test-time-model', TestTimeModelViewSet, 'test-time-model')
-router.register('test', TestViewSet, 'test')
+router.register('update-test', UpdateTestViewSet, 'update-test')
+router.register('test', GetTestViewSet, 'test')
 router.register('sub-test', SubTestViewSet, 'sub-test')
 
 urlpatterns = router.urls + [
