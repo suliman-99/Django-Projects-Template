@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "090bcaafd44f8cdc2a4f7b906fa0956555d2a93da0c684e201cd1c09b082c0b9"
+            "sha256": "00c95a60d0072cc0879ec68e0c83d68afeb842974d681a0aa26be56d7f41f7f8"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -392,6 +392,14 @@
             ],
             "index": "pypi",
             "version": "==24.2"
+        },
+        "django-modeltranslation": {
+            "hashes": [
+                "sha256:81b68e4dc806a3b779ac88babe1cbd99d5318d374a43b3737a65fb0f4c1cffe8",
+                "sha256:a6e2c459e3b31852287d030bc6e29fa28576db97455dccd399fe08ac8e9223b9"
+            ],
+            "index": "pypi",
+            "version": "==0.18.11"
         },
         "django-phonenumber-field": {
             "extras": [
@@ -1455,7 +1463,7 @@
                 "sha256:69b1a937c3a517342112fb4c6df7e72fc39a38e7891a5730ed4985b5214b5475",
                 "sha256:b0abd7c89e8fb96f98db18d86106ff1d90ab692004eb746cf6eda2682f91b3cb"
             ],
-            "markers": "python_version < '3.11'",
+            "markers": "python_version >= '3.8'",
             "version": "==4.10.0"
         },
         "tzdata": {
