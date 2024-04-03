@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'fcm_django',
     'drf_spectacular',
     'phonenumber_field',
+    'modeltranslation',
     'safedelete',
     'simple_history',
 
