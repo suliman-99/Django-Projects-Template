@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-from common.audit.models import AuditModel
+from common.audit.models import HistoricalAuditModel
 
 
 User = get_user_model()
@@ -10,7 +10,7 @@ def notification_image_path(notification, filename):
     return f'notifications/images/{filename}'
 
 
-class Notification(AuditModel):
+class Notification(HistoricalAuditModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='notifications')
     is_viewed = models.BooleanField(default=False)
 
