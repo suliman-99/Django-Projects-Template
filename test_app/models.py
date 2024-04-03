@@ -1,5 +1,5 @@
 from django.db import models
-from common.audit.models import AuditModel
+from common.audit.models import AuditModel, HistoricalAuditModel
 
 
 class TestTranslationModel(models.Model):
@@ -7,14 +7,9 @@ class TestTranslationModel(models.Model):
     translated_text = models.JSONField()
 
 
-class TestTimeModel(models.Model):
-    created_at = models.DateTimeField(auto_now_add=True)
-    timezone_now = models.DateTimeField()
-    timezone_localtime_timezone_now = models.DateTimeField()
-
-
-class TestDeleteModel(AuditModel):
+class Test(AuditModel):
     text = models.CharField(max_length=100)
+    new_text = models.CharField(max_length=100)
     un = models.IntegerField()
 
     class Meta:
@@ -27,6 +22,12 @@ class TestDeleteModel(AuditModel):
         ]
 
 
-class TestDeleteModel2(AuditModel):
-    base = models.ForeignKey(TestDeleteModel, models.CASCADE, related_name="bases")
+class SubTest(HistoricalAuditModel):
+    test = models.ForeignKey(Test, models.CASCADE, related_name="sub_tests")
     text = models.CharField(max_length=100)
+
+
+class TestTimeModel(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    timezone_now = models.DateTimeField()
+    timezone_localtime_timezone_now = models.DateTimeField()

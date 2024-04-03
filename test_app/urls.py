@@ -9,8 +9,8 @@ from test_app.views import (
     TestGetTranslationModelViewSet,
     TestTimeModelViewSet,
     ExceptionView,
-    TestDeleteViewSet,
-    TestDeleteViewSet2,
+    TestViewSet,
+    SubTestViewSet,
 )
 
 router = routers.DefaultRouter()
@@ -18,8 +18,8 @@ router = routers.DefaultRouter()
 router.register('test-update-translation', TestUpdateTranslationModelViewSet, 'test-update-translation')
 router.register('test-get-translation', TestGetTranslationModelViewSet, 'test-get-translation')
 router.register('test-time-model', TestTimeModelViewSet, 'test-time-model')
-router.register('test-delete', TestDeleteViewSet, 'test-delete')
-router.register('test-delete2', TestDeleteViewSet2, 'test-delete2')
+router.register('test', TestViewSet, 'test')
+router.register('sub-test', SubTestViewSet, 'sub-test')
 
 urlpatterns = router.urls + [
     path('test-send-email-verification-code/', TestSendEmailVerificationCode.as_view(), name='test-send-email-verification-code'),

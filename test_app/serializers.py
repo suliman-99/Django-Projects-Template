@@ -1,7 +1,7 @@
 from django.utils import timezone
 from rest_framework import serializers
 from translation.fields import UpdateTranslationField, GetTranslationField
-from test_app.models import TestTranslationModel, TestTimeModel, TestDeleteModel, TestDeleteModel2
+from test_app.models import TestTranslationModel, TestTimeModel, Test, SubTest
 
 
 class TestUpdateTranslationSerializer(serializers.ModelSerializer):
@@ -50,13 +50,13 @@ class TestTimeModelSerializer(serializers.ModelSerializer):
         return super().create(validated_data)
     
 
-class TestDeleteSerializer(serializers.ModelSerializer):
+class TestSerializer(serializers.ModelSerializer):
     class Meta:
-        model = TestDeleteModel
+        model = Test
         fields = '__all__'
     
 
-class TestDeleteSerializer2(serializers.ModelSerializer):
+class SubTestSerializer(serializers.ModelSerializer):
     class Meta:
-        model = TestDeleteModel2
+        model = SubTest
         fields = '__all__'

@@ -6,13 +6,13 @@ from rest_framework.response import Response
 from common.permissions import IsSuperuser
 from users.verification.email import _send_verification_code_email_message
 from users.verification.phone_number import _send_verification_code_phone_number_message, check_verification_code_phone_number
-from test_app.models import TestTranslationModel, TestDeleteModel, TestDeleteModel2
+from test_app.models import TestTranslationModel, Test, SubTest
 from test_app.serializers import (
     TestUpdateTranslationSerializer, 
     TestGetTranslationSerializer, 
     TestTimeModelSerializer,
-    TestDeleteSerializer,
-    TestDeleteSerializer2,
+    TestSerializer,
+    SubTestSerializer,
 )
 
 
@@ -72,23 +72,23 @@ class TestGetTranslationModelViewSet(ModelViewSet):
     http_method_names = ['get']
     serializer_class = TestGetTranslationSerializer
     queryset = TestTranslationModel.objects.all()
+
+
+class TestViewSet(ModelViewSet):
+    permission_classes = (IsSuperuser,)
+    serializer_class = TestSerializer
+    queryset = Test.objects.all()
+
+
+class SubTestViewSet(ModelViewSet):
+    permission_classes = (IsSuperuser,)
+    serializer_class = SubTestSerializer
+    queryset = SubTest.objects.all()
     
 
 class TestTimeModelViewSet(ModelViewSet):
     permission_classes = (IsSuperuser, )
     serializer_class = TestTimeModelSerializer
-
-
-class TestDeleteViewSet(ModelViewSet):
-    permission_classes = (IsSuperuser,)
-    serializer_class = TestDeleteSerializer
-    queryset = TestDeleteModel.objects.all()
-
-
-class TestDeleteViewSet2(ModelViewSet):
-    permission_classes = (IsSuperuser,)
-    serializer_class = TestDeleteSerializer2
-    queryset = TestDeleteModel2.objects.all()
 
 
 class ExceptionView(CreateAPIView):
