@@ -33,9 +33,9 @@ def ensure_base_value(translation_data):
 class TranslationField(serializers.JSONField):
     """ 
     The `TranslationField` class provides a minimal class which may be used
-    for writing custom tranlsation implementations.
+    for writing custom translation implementations.
     
-    Note: it is subclasse of `JSONField`
+    Note: it is subclass of `JSONField`
     """
 
     def __init__(self, **kwargs):
@@ -59,7 +59,7 @@ class TranslationField(serializers.JSONField):
 
 class GetTranslationField(TranslationField):
     """ 
-    The `GetTranslationField` class  is a subclasse of `TranslationField`
+    The `GetTranslationField` class  is a subclass of `TranslationField`
 
     GET:
         It returns the translated value of the field depending on the `Accept-Language` entered in the header.
@@ -80,7 +80,7 @@ class GetTranslationField(TranslationField):
 
 class UpdateTranslationField(TranslationField):
     """
-    The `UpdateTranslationField` class  is a subclasse of `TranslationField`
+    The `UpdateTranslationField` class  is a subclass of `TranslationField`
 
     GET:
         It returns all translation values of the field in this format:
