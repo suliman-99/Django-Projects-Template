@@ -3,7 +3,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, UserManager as BaseUserManager
 from django.contrib.auth.hashers import make_password
 from phonenumber_field.modelfields import PhoneNumberField
-from common.audit.models import AuditModel
+from common.audit.models import HistoricalAuditModel
 
 
 class UserManager(BaseUserManager):
@@ -19,7 +19,7 @@ class UserManager(BaseUserManager):
         return self.create_user(**data)
 
 
-class User(AbstractUser, AuditModel):
+class User(AbstractUser, HistoricalAuditModel):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     username = models.CharField(max_length=100, unique=False, null=True, blank=True)
     first_login = models.DateTimeField(null=True, blank=True)
