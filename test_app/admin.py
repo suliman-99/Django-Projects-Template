@@ -1,15 +1,14 @@
 from django.contrib import admin
 from common.audit.admin import AuditModelAdmin
 from common.audit.variables import audit_fields
-from translation.methods import translate
+from translation.methods import full_translate
 from test_app.models import TestTimeModel, Test, SubTest
 
 
 @admin.register(Test)
 class TestAdmin(AuditModelAdmin):
-    list_display = (
-        'text',
-        *translate('text'),
+    list_display = (\
+        *full_translate('text'),
         'un',
         *audit_fields,
     )

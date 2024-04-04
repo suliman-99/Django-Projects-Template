@@ -7,6 +7,7 @@ from common.permissions import IsSuperuser
 from users.verification.email import _send_verification_code_email_message
 from users.verification.phone_number import _send_verification_code_phone_number_message, check_verification_code_phone_number
 from test_app.models import Test, SubTest
+from test_app.filters import UpdateTestFilter, GetTestFilter, SubTestFilter
 from test_app.serializers import (
     TestTimeModelSerializer,
     UpdateTestSerializer,
@@ -19,18 +20,21 @@ from test_app.serializers import (
 class UpdateTestViewSet(ModelViewSet):
     permission_classes = (IsSuperuser,)
     serializer_class = UpdateTestSerializer
+    filterset_class = UpdateTestFilter
     queryset = Test.objects.all()
 
 
 class GetTestViewSet(ModelViewSet):
     permission_classes = (IsSuperuser,)
     serializer_class = GetTestSerializer
+    filterset_class = GetTestFilter
     queryset = Test.objects.all()
 
 
 class SubTestViewSet(ModelViewSet):
     permission_classes = (IsSuperuser,)
     serializer_class = SubTestSerializer
+    filterset_class = SubTestFilter
     queryset = SubTest.objects.all()
 
 # --------------------------------------------------
