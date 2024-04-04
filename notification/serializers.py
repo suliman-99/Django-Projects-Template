@@ -2,7 +2,7 @@ from django.db.models.query_utils import Q
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from common.audit.variables import audit_fields, audit_read_only_kwargs
-from translation.methods import translate
+from translation.methods import full_translate
 from notification.models import Notification
 from notification.methods import push_notifications
 
@@ -79,9 +79,9 @@ class FullNotificationSerializer(serializers.ModelSerializer):
             'user',
             'is_viewed',
 
-            *translate('title'),
-            *translate('body'),
-            'image',
+            *full_translate('title'),
+            *full_translate('body'),
+            *full_translate('image'),
             
             *audit_fields,
         )
