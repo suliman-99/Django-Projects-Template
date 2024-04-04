@@ -27,5 +27,20 @@ def translate(name, value=None) -> list[str] | dict[str, any]:
     return ret
 
 
+def full_translate(name, value=None) -> list[str] | dict[str, any]:
+    '''
+    if value is None return ['name', 'name_en', 'name_ar',  ... ]
+    else return {'name': value, 'name_en': value, 'name_ar': value,  ... }
+    '''
+    ret = [name] + [ f'{name}_{code}' for code in get_languages_codes() ]
+    if value:
+        ret = { name: value for name in ret }
+    return ret
+
+
 def translation_field_required_kwargs(name):
     return translate(name, { 'required': True, 'allow_null': False, 'allow_blank': False })
+
+
+def full_translation_field_required_kwargs(name):
+    return full_translate(name, { 'required': True, 'allow_null': False, 'allow_blank': False })
