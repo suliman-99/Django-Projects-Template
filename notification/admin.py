@@ -1,6 +1,7 @@
 from django.contrib import admin
 from common.audit.admin import AuditModelAdmin
 from common.audit.variables import audit_fields
+from translation.methods import translate
 from notification.models import Notification
 
 
@@ -10,8 +11,11 @@ class NotificationAdmin(AuditModelAdmin):
         'id',
 
         'title',
+        *translate('title'),
         'body',
+        *translate('body'),
         'image',
+        *translate('image'),
 
         'user',
         'is_viewed',

@@ -2,11 +2,7 @@ from django.db.models.query_utils import Q
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from common.audit.variables import audit_fields, audit_read_only_kwargs
-from translation.fields import (
-    GetTranslationField, 
-    UpdateTranslationField,
-    fallback_to_base
-)
+from translation.methods import translate
 from notification.models import Notification
 from notification.methods import push_notifications
 
@@ -60,9 +56,6 @@ class GetNotificationSerializer(serializers.ModelSerializer):
             'created_at',
         )
 
-    title = GetTranslationField(fallback=fallback_to_base)
-    body = GetTranslationField(fallback=fallback_to_base)
-
 
 class MarkNotificationAsViewedSerializer(serializers.ModelSerializer):
     class Meta:
@@ -86,8 +79,8 @@ class FullNotificationSerializer(serializers.ModelSerializer):
             'user',
             'is_viewed',
 
-            'title',
-            'body',
+            *translate('title'),
+            *translate('body'),
             'image',
             
             *audit_fields,
@@ -95,6 +88,3 @@ class FullNotificationSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             **audit_read_only_kwargs
         }
-
-    title = UpdateTranslationField()
-    body = UpdateTranslationField()

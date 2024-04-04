@@ -1,8 +1,8 @@
 from django.contrib.auth import get_user_model
-from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 from firebase_admin import messaging
 from fcm_django.models import FCMDevice
-from translation.fields import UpdateTranslationField
+from translation.methods import get_languages_codes
 from notification.models import Notification
 
 
@@ -22,7 +22,7 @@ def _push_notifications(
         title: str,
         body: str,
         image: str,
-        **data
+        **data,
     ) -> None:
     data = clean_notification_data(data)
     FCMDevice.objects.filter(user__in=users).send_message(
@@ -39,60 +39,65 @@ def _push_notifications(
 
 def save_notification(
         users: list,
-        title: dict,
-        body: dict,
-        image: str,
+        **data,
     ):
     notifications = [
         Notification(
             user=user,
-            title=title,
-            body=body,
-            image=image,
+            **data,
         ) 
         for user in users
     ]
     Notification.objects.bulk_create(notifications)
-    
 
-class ValidateTranslatedNotificationSerializer(serializers.Serializer):
-    title = UpdateTranslationField(base_is_enough=True)
-    body = UpdateTranslationField(base_is_enough=True)
-    image = serializers.CharField()
+
+def validate_str_value(field, value):
+    if not isinstance(value, str):
+        raise ValidationError(f'{field} must be str.')
+
+
+def validate_translated_field(notification_data, field):
+    value = notification_data.get(field)
+    if value:
+        validate_str_value(field, value)
+        return
+    
+    for code in get_languages_codes():
+        field_code = f'{field}_{code}'
+        value = notification_data.get(field_code)
+        if not value:
+            translated_fields = [f'{field}_{code}' for code in get_languages_codes()]
+            raise ValidationError(f'if {field} is not provided then {translated_fields} are required.')
+        validate_str_value(field_code, value)
+
+
+def validate_notification_data(notification_data):
+    validate_translated_field(notification_data, 'title')
+    validate_translated_field(notification_data, 'body')
+    validate_translated_field(notification_data, 'image')
 
 
 def push_notifications(
         users: list,
-        title: dict | str,
-        body: dict | str,
-        image: str,
         save: bool = True,
-        **data
+        **data,
     ):
-    serializer = ValidateTranslatedNotificationSerializer(data={
-        'title': title,
-        'body': body,
-        'image': image,
-    })
-    serializer.is_valid(raise_exception=True)
-    validated_data = serializer.validated_data
-    title = validated_data['title']
-    body = validated_data['body']
-    image = validated_data['image']
+    validate_notification_data(data)
 
     language_code_map = {}
     for user in users:
         language_code_map.setdefault(user.language_code, []).append(user)
 
-    title_base = title.get('base')
-    body_base = body.get('base')
+    title = data.pop('title', None)
+    body = data.pop('body', None)
+    image = data.pop('image', None)
     for language_code, temp_users in language_code_map.items():
         _push_notifications(
             temp_users,
-            title=title.get(language_code, title_base),
-            body=body.get(language_code, body_base),
-            image=image,
-            **data
+            title=data.get(f'title_{language_code}', title),
+            body=data.get(f'body_{language_code}', body),
+            image=data.get(f'image_{language_code}', image),
+            **data,
         )
     
     if save:
@@ -101,4 +106,5 @@ def push_notifications(
             title=title,
             body=body,
             image=image,
+            **data,
         )
