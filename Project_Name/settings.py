@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
+    'crispy_forms',
+    'crispy_bootstrap4',
     'django_filters',
     'corsheaders',
     'dbbackup',
@@ -197,6 +199,8 @@ REST_FRAMEWORK = {
         'rest_framework.filters.SearchFilter',
     ],
 }
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('JWT'),

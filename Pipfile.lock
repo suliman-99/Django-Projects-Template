@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "00c95a60d0072cc0879ec68e0c83d68afeb842974d681a0aa26be56d7f41f7f8"
+            "sha256": "e5cc0a3a88816bab4b8a9f1ea388e6f4e9504e2772044d1f655b708c0ad5e75b"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -316,6 +316,14 @@
             "markers": "python_full_version >= '3.7.0'",
             "version": "==3.3.2"
         },
+        "crispy-bootstrap4": {
+            "hashes": [
+                "sha256:208673bf6a25892a656971af7a00e18ba2f7f06cd4a0d667923bd6134e64d276",
+                "sha256:46cf98777a28621d240bf71eb36d4a26ff86e9e19be1cfd822645f4043d18c31"
+            ],
+            "index": "pypi",
+            "version": "==2024.1"
+        },
         "cryptography": {
             "hashes": [
                 "sha256:0270572b8bd2c833c3981724b8ee9747b3ec96f699a9665470018594301439ee",
@@ -355,11 +363,11 @@
         },
         "django": {
             "hashes": [
-                "sha256:5c7d748ad113a81b2d44750ccc41edc14e933f56581683db548c9257e078cc83",
-                "sha256:5fb37580dcf4a262f9258c1f4373819aacca906431f505e4688e37f3a99195df"
+                "sha256:4bd01a8c830bb77a8a3b0e7d8b25b887e536ad17a81ba2dce5476135c73312bd",
+                "sha256:916423499d75d62da7aa038d19aef23d23498d8df229775eb0a6309ee1013775"
             ],
             "index": "pypi",
-            "version": "==5.0.3"
+            "version": "==5.0.4"
         },
         "django-cors-headers": {
             "hashes": [
@@ -368,6 +376,14 @@
             ],
             "index": "pypi",
             "version": "==4.3.1"
+        },
+        "django-crispy-forms": {
+            "hashes": [
+                "sha256:4d7ec431933ad4d4b5c5a6de4a584d24613c347db9ac168723c9aaf63af4bb96",
+                "sha256:d592044771412ae1bd539cc377203aa61d4eebe77fcbc07fbc8f12d3746d4f6b"
+            ],
+            "index": "pypi",
+            "version": "==2.1"
         },
         "django-dbbackup": {
             "hashes": [
@@ -579,11 +595,11 @@
         },
         "google-api-python-client": {
             "hashes": [
-                "sha256:07dc674449ed353704b1169fdee792f74438d024261dad71b6ce7bb9c683d51f",
-                "sha256:f6d3258420f7c76b0f5266b5e402e6f804e30351b018a10083f4a46c3ec33773"
+                "sha256:0a62b60fbd61b61a455f15d925264b3301099b67cafd2d33cf8bf151f1fca4f4",
+                "sha256:51a0385cff65ec135106e8be60ee7112557396dde5f44113ae23912baddda143"
             ],
             "markers": "python_version >= '3.7'",
-            "version": "==2.124.0"
+            "version": "==2.125.0"
         },
         "google-auth": {
             "hashes": [
@@ -610,11 +626,11 @@
         },
         "google-cloud-firestore": {
             "hashes": [
-                "sha256:589ce49c6b8d7315a248327e4a124a44143f5a5314ea768f7c851660c21e6321",
-                "sha256:71b1b32c11e7cb2fa804037865619930655409a49238807a88c244510e5d21c7"
+                "sha256:3347ac38346c2702134d4c81f652a5e3451c840a6237f28b844501bd528e5fd8",
+                "sha256:e61ae70229a6e532e439c8d16447a32024447f2ee4a2303fc4d054c258d6877f"
             ],
             "markers": "platform_python_implementation != 'PyPy'",
-            "version": "==2.15.0"
+            "version": "==2.16.0"
         },
         "google-cloud-storage": {
             "hashes": [
