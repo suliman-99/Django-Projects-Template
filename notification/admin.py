@@ -19,3 +19,20 @@ class NotificationAdmin(AuditModelAdmin):
 
         *audit_fields,
     )
+    list_filter = (
+        *full_translate('title'),
+        *full_translate('body'),
+        *full_translate('image'),
+
+        'user',
+        'is_viewed',
+
+        *audit_fields,
+    )
+    search_fields = (
+        *full_translate('title'),
+        *full_translate('body'),
+    )
+    ordering = (
+        '-updated_at',
+    )
