@@ -11,6 +11,7 @@ from test_app.filters import UpdateTestFilter, GetTestFilter, SubTestFilter
 from test_app.serializers import (
     TestTimeModelSerializer,
     UpdateTestSerializer,
+    ByFieldUpdateTestSerializer,
     GetTestSerializer,
     SubTestSerializer,
 )
@@ -20,6 +21,12 @@ from test_app.serializers import (
 class UpdateTestViewSet(ModelViewSet):
     permission_classes = (IsSuperuser,)
     serializer_class = UpdateTestSerializer
+    filterset_class = UpdateTestFilter
+    queryset = Test.objects.all()
+
+class ByFieldUpdateTestViewSet(ModelViewSet):
+    permission_classes = (IsSuperuser,)
+    serializer_class = ByFieldUpdateTestSerializer
     filterset_class = UpdateTestFilter
     queryset = Test.objects.all()
 

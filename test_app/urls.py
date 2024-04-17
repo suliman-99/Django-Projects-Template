@@ -8,6 +8,7 @@ from test_app.views import (
     TestTimeModelViewSet,
     ExceptionView,
     UpdateTestViewSet,
+    ByFieldUpdateTestViewSet,
     GetTestViewSet,
     SubTestViewSet,
 )
@@ -16,6 +17,7 @@ router = routers.DefaultRouter()
 
 router.register('test-time-model', TestTimeModelViewSet, 'test-time-model')
 router.register('update-test', UpdateTestViewSet, 'update-test')
+router.register('by-field-update-test', ByFieldUpdateTestViewSet, 'by-field-update-test')
 router.register('test', GetTestViewSet, 'test')
 router.register('sub-test', SubTestViewSet, 'sub-test')
 

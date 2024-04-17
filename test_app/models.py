@@ -6,14 +6,14 @@ class Test(AuditModel):
     text = models.CharField(max_length=100, null=False, blank=False)
     un = models.IntegerField()
 
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=['un'],
-                condition=models.Q(deleted__isnull=True),
-                name='unique_active_un',
-            ),
-        ]
+    # class Meta:
+    #     constraints = [
+    #         models.UniqueConstraint(
+    #             fields=['un'],
+    #             condition=models.Q(deleted__isnull=True),
+    #             name='unique_active_un',
+    #         ),
+    #     ]
 
 
 class SubTest(HistoricalAuditModel):

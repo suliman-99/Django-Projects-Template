@@ -1,6 +1,8 @@
 from django.utils import timezone
 from rest_framework import serializers
 from translation.methods import translate, translation_field_required_kwargs
+from translation.fields import UpdateTranslationField
+from translation.plugs import FromJsonTranslationPlug
 from test_app.models import TestTimeModel, Test, SubTest
 
 
@@ -15,6 +17,18 @@ class UpdateTestSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             **translation_field_required_kwargs('text'),
         }
+
+
+class ByFieldUpdateTestSerializer(FromJsonTranslationPlug, serializers.ModelSerializer):
+    class Meta:
+        model = Test
+        fields = (
+            'id',
+            'text',
+            'un',
+        )
+
+    text = UpdateTranslationField(base_is_enough=True)
 
 
 class GetTestSerializer(serializers.ModelSerializer):
