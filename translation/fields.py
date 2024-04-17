@@ -63,7 +63,7 @@ def validate_translation_data(
         })
 
 
-class UpdateTranslationField(serializers.JSONField):
+class UpdateTranslationField(serializers.SerializerMethodField):
     def __init__(self, 
         allow_partial=False,
         base_is_enough=False,
@@ -81,10 +81,12 @@ class UpdateTranslationField(serializers.JSONField):
         
         super().__init__(**kwargs)
 
-    def to_internal_value(self, translation_data):
+    def get_validated_translation_data(self):
+        initial_data = self.parent.initial_data
+        translation_data = initial_data.get(self.field_name)
         translation_data = coordinate_string_json(translation_data)
         validate_translation_data_is_json(translation_data, self.field_name)
-        get_from_outer_values(self.parent.initial_data, translation_data, self.field_name)
+        get_from_outer_values(initial_data, translation_data, self.field_name)
         ensure_base_value(translation_data)
         validate_translation_data(
             self.field_name,
@@ -94,17 +96,16 @@ class UpdateTranslationField(serializers.JSONField):
             self.allow_partial,
             translation_data,
         )
-        self.translation_data = translation_data
-        return self.translation_data.get('base')
-     
+        return translation_data
+    
     def add_outer_values(self, data):
+        translation_data = self.get_validated_translation_data()
         return data.update({
             get_field_name(self.field_name, language_code): value
-            for language_code, value in self.translation_data.items()
+            for language_code, value in translation_data.items()
         })
 
-    def to_representation(self, value):
-        instance = self.parent.instance
+    def to_representation(self, instance):
         return {
             language_code: getattr(instance, get_field_name(self.field_name, language_code))
             for language_code in get_languages_codes(True)
