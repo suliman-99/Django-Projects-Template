@@ -8,7 +8,6 @@ from notification.filters import NotificationFilter
 from notification.serializers import (
     SendNotificationSerializer,
     GetNotificationSerializer,
-    MarkNotificationAsViewedSerializer,
     FullNotificationSerializer,
 )
 
@@ -54,7 +53,6 @@ class MyNotificationViewSet(viewsets.ModelViewSet):
     serializer_class_action_map = {
         'retrieve': GetNotificationSerializer,
         'list': GetNotificationSerializer,
-        'mark_as_viewed': MarkNotificationAsViewedSerializer,
     }
 
     def get_queryset(self):
@@ -65,7 +63,10 @@ class MyNotificationViewSet(viewsets.ModelViewSet):
     
     @action(detail=True, methods=['put'], url_path='mark-as-viewed')
     def mark_as_viewed(self, request, *args, **kwargs):
-        return self.update(request, *args, **kwargs)
+        instance = self.get_object()
+        instance.is_viewed = True
+        instance.save()
+        return Response({})
     
     @action(detail=False, methods=['put'], url_path='mark-all-as-viewed')
     def mark_all_as_viewed(self, request, *args, **kwargs):

@@ -35,8 +35,8 @@ class SendNotificationSerializer(serializers.Serializer):
     def create(self, validated_data):
         push_notifications(
             users=self.get_users(validated_data['filter']),
+            data=validated_data['notification'],
             save=validated_data['save'],
-            **validated_data['notification'],
         )
         return True
     
@@ -56,20 +56,6 @@ class GetNotificationSerializer(serializers.ModelSerializer):
             'created_at',
         )
 
-
-class MarkNotificationAsViewedSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Notification
-        fields = []
-
-    def update(self, instance, validated_data):
-        instance.is_viewed = True
-        instance.save()
-        return instance
-    
-    def to_representation(self, instance):
-        return GetNotificationSerializer(instance, context=self.context).data
-    
 
 class FullNotificationSerializer(serializers.ModelSerializer):
     class Meta:
