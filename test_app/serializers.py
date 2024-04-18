@@ -2,7 +2,7 @@ from django.utils import timezone
 from rest_framework import serializers
 from translation.methods import translate, translation_field_required_kwargs
 from translation.fields import UpdateTranslationField
-from translation.plugs import FromJsonTranslationPlug
+from translation.plugs import JsonTranslationPlug
 from test_app.models import TestTimeModel, Test, SubTest
 
 
@@ -19,7 +19,7 @@ class UpdateTestSerializer(serializers.ModelSerializer):
         }
 
 
-class ByFieldUpdateTestSerializer(FromJsonTranslationPlug, serializers.ModelSerializer):
+class ByFieldUpdateTestSerializer(JsonTranslationPlug, serializers.ModelSerializer):
     class Meta:
         model = Test
         fields = (
