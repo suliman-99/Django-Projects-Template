@@ -1,7 +1,6 @@
 import json
-from django.utils.translation import get_language
 from rest_framework import serializers, exceptions
-from translation.methods import get_field_name, get_languages_codes, get_default_language_code
+from translation.methods import get_field_name, get_languages_codes
 
 
 def coordinate_string_json(translation_data):
@@ -25,10 +24,6 @@ def get_from_outer_values(serializer_initial_data, translation_data, field_name)
                 translation_data[language_code] = value
 
 
-def ensure_base_value(translation_data):
-    translation_data.setdefault('base', translation_data.get(get_default_language_code(), ''))
-
-
 def validate_translation_data(
         field_name,
         accepted_languages,
@@ -37,29 +32,30 @@ def validate_translation_data(
         allow_partial,
         translation_data,
     ):
-    missed_language_codes = []
+
     invalid_language_codes = []
+    accepted_keys = ['base', *accepted_languages]
+    for key in translation_data.keys():
+        if key not in accepted_keys:
+            invalid_language_codes.append(key)
     
+    missed_language_codes = []
     if not allow_partial and not (base_is_enough and translation_data.get('base')):
         for language_code in required_languages:
             if not translation_data.get(language_code):
                 missed_language_codes.append(language_code)
 
-    
-    accepted_keys = ['base', *accepted_languages]
-    for key in translation_data.keys():
-        if key not in accepted_keys:
-            invalid_language_codes.append(key)
-
     error_messages = []
-    if missed_language_codes:
-        error_messages.append(f'missed language codes: {missed_language_codes}')
     if invalid_language_codes:
         error_messages.append(f'invalid language codes: {invalid_language_codes}')
+    if missed_language_codes:
+        error_messages.append(f'missed language codes: {missed_language_codes}')
 
     if error_messages:
+        if base_is_enough:
+            error_messages.append('base is enough')
         raise exceptions.ValidationError({
-            field_name: ', '.join(error_messages) + f' in {field_name}',
+            field_name: ' | '.join(error_messages) + f' in {field_name}',
         })
 
 
@@ -83,11 +79,10 @@ class UpdateTranslationField(serializers.SerializerMethodField):
 
     def get_validated_translation_data(self):
         initial_data = self.parent.initial_data
-        translation_data = initial_data.get(self.field_name)
+        translation_data = initial_data.get(self.field_name, {})
         translation_data = coordinate_string_json(translation_data)
         validate_translation_data_is_json(translation_data, self.field_name)
         get_from_outer_values(initial_data, translation_data, self.field_name)
-        ensure_base_value(translation_data)
         validate_translation_data(
             self.field_name,
             self.accepted_languages,
