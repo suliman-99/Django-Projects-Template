@@ -1,15 +1,18 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin, GroupAdmin
+from django.contrib.auth.models import Permission, Group
 from common.audit.admin import AuditModelAdmin
 from common.audit.variables import audit_fields
 from users.models import User
 from users.forms import CustomAuthenticationForm
+from users.methods import get_permission_full_name
 
 
 admin.site.login_form = CustomAuthenticationForm
 
 
 @admin.register(User)
-class UserAdmin(AuditModelAdmin):
+class UserAdmin(UserAdmin, AuditModelAdmin):
     list_display = (
         'id',
         
@@ -78,3 +81,47 @@ class UserAdmin(AuditModelAdmin):
     ordering = (
         '-updated_at',
     )
+    
+
+admin.site.unregister(Group)
+@admin.register(Group)
+class GroupAdmin(GroupAdmin):
+    list_display = (
+        'id', 
+        'name',
+    )
+    search_fields = (
+        'id', 
+        'name',
+    )
+    ordering = (
+        'id', 
+    )
+
+
+@admin.register(Permission)
+class PermissionAdmin(admin.ModelAdmin):
+    list_display = (
+        'id', 
+        'name', 
+        'codename', 
+        'full_name', 
+        'content_type',
+    )
+    list_filter = (
+        'content_type__app_label', 
+        'content_type__model', 
+        'content_type',
+    )
+    search_fields = (
+        'name', 
+        'codename', 
+        'content_type__app_label', 
+        'content_type__model',
+    )
+    ordering = (
+        'id',
+    )
+
+    def full_name(self, obj):
+        return get_permission_full_name(obj)

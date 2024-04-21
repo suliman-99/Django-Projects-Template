@@ -1,4 +1,5 @@
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth.models import Permission
 from django.utils import timezone
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from common.code_generation import generate_code
@@ -65,3 +66,7 @@ def verify_phone_number(user: User, save: bool = True):
 
 def get_user_language_code(user: User):
     return user.language_code if user.language_code in get_languages_codes() else get_default_language_code()
+
+
+def get_permission_full_name(permission: Permission):
+        return f'{permission.content_type.app_label}.{permission.codename}'
