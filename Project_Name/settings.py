@@ -35,8 +35,13 @@ INTERNAL_IPS = ['127.0.0.1']
 
 # Application definition
 INSTALLED_APPS = [
-    'users',
+    'phonenumber_field',
+    'modeltranslation',
+    'safedelete',
+    'simple_history',
     'django_seeding',
+    'users',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -48,14 +53,10 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap4',
     'django_filters',
+    'drf_spectacular',
     'corsheaders',
     'dbbackup',
     'fcm_django',
-    'drf_spectacular',
-    'phonenumber_field',
-    'modeltranslation',
-    'safedelete',
-    'simple_history',
 
     'logger',
     'content_type',
