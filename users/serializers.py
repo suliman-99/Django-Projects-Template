@@ -257,8 +257,6 @@ class FullUserSerializer(serializers.ModelSerializer):
             'password',
             
             'is_active',
-            'is_staff',
-            'is_superuser',
             'is_admin',
 
             'date_joined',
