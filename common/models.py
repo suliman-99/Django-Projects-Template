@@ -1,10 +1,9 @@
-from typing import Any
 from django.db import models
 from django.core.validators import FileExtensionValidator
 
 
 class SVGField(models.FileField):
-    def __init__(self, *args: Any, **kwargs: Any) -> None:
+    def __init__(self, *args, **kwargs) -> None:
         kwargs.setdefault('validators', []).append(FileExtensionValidator(['svg']))
         super().__init__(*args, **kwargs)
 
