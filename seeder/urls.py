@@ -1,8 +1,9 @@
 from rest_framework import routers
-from seeder.views import AppliedSeederViewSet
+from seeder.apis.views import AppliedSeederViewSet, RegisteredSeederViewSet
 
 router = routers.DefaultRouter()
 
+router.register('registered-seeders', RegisteredSeederViewSet, 'registered-seeders')
 router.register('applied-seeders', AppliedSeederViewSet, 'applied-seeders')
 
 urlpatterns = router.urls 
