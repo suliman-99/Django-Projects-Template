@@ -53,6 +53,7 @@ class ChangeEmailSerializer(serializers.ModelSerializer):
         fields = ('email', )
 
     def update(self, user, validated_data):
+        validated_data['email'] = User.objects.normalize_email(validated_data['email'])
         validated_data['email_verified'] = False
         ret = super().update(user, validated_data)
         send_verification_code_email_message_to_user(user)
@@ -299,9 +300,15 @@ class FullUserSerializer(serializers.ModelSerializer):
     
     def validate(self, attrs):
         validated_data = super().validate(attrs)
+        
         password = validated_data.pop('password', None)
+        email = validated_data.pop('email', None)
+        
         if password:
             validated_data['password'] = make_password(password)
+        if email:
+            validated_data['email'] = User.objects.normalize_email(email)
+        
         return validated_data
 
 # ---------------------------------------- Permission ----------------------------------------

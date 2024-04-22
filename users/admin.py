@@ -13,6 +13,21 @@ admin.site.login_form = CustomAuthenticationForm
 
 @admin.register(User)
 class UserAdmin(UserAdmin, AuditModelAdmin):
+    fieldsets = None
+    add_fieldsets = (
+        (
+            None,
+            {
+                "classes": ("wide",),
+                "fields": (
+                    "email",
+                    "phone_number",
+                    "password1",
+                    "password2",
+                ),
+            },
+        ),
+    )
     list_display = (
         'id',
         
