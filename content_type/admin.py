@@ -3,7 +3,7 @@ from django.contrib.contenttypes.models import ContentType
 
 
 @admin.register(ContentType)
-class ServiceAdmin(admin.ModelAdmin):
+class ContentTypeAdmin(admin.ModelAdmin):
     list_display = (
         'id', 
         'app_label', 
