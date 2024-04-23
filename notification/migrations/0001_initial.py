@@ -60,9 +60,9 @@ class Migration(migrations.Migration):
                 ('body', models.TextField()),
                 ('body_en', models.TextField(null=True)),
                 ('body_ar', models.TextField(null=True)),
-                ('image', models.ImageField(blank=True, max_length=500, null=True, upload_to=notification.models.notification_image_path)),
-                ('image_en', models.ImageField(blank=True, max_length=500, null=True, upload_to=notification.models.notification_image_path)),
-                ('image_ar', models.ImageField(blank=True, max_length=500, null=True, upload_to=notification.models.notification_image_path)),
+                ('image', models.ImageField(blank=True, max_length=500, null=True)),
+                ('image_en', models.ImageField(blank=True, max_length=500, null=True)),
+                ('image_ar', models.ImageField(blank=True, max_length=500, null=True)),
             ],
             options={
                 'abstract': False,
