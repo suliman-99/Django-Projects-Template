@@ -5,13 +5,10 @@ from rest_framework.exceptions import ValidationError as DRFValidationError
 
 
 def message_coordinator(message, field_name):
-    return message \
-        .replace('blank', 'null') \
-        .replace('may not be null', 'is required') \
-        .replace('This', field_name) \
-        .replace("_id", "") \
-        .replace("_", " ") \
-        .capitalize() \
+    message = message.replace("_id", "").replace("_", " ") 
+    if message.startswith("This") and field_name is not None and field_name != 'non_field_errors':
+        message = message + f' ({field_name})'
+    return message.capitalize()
 
 
 def get_first_error_message(detail):
@@ -36,7 +33,10 @@ def get_exception_message(exc):
 def custom_exception_handler(exc, context):
     # change the DjangoValidationError to DRFValidationError while i am in API not in django admin
     if isinstance(exc, DjangoValidationError):
-        exc = DRFValidationError(detail=exc.message_dict)
+        try:
+            exc = DRFValidationError(detail=exc.message_dict)
+        except:
+            exc = DRFValidationError(detail=exc.messages)
 
     response = exception_handler(exc, context)
 
