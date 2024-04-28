@@ -11,6 +11,12 @@ class UpdateTestSerializer(serializers.ModelSerializer):
         model = Test
         fields = (
             'id',
+            'bool',
+            'num',
+            'date',
+            'time',
+            'datetime',
+            'duration',
             *translate('text'),
             'un',
         )
@@ -24,6 +30,12 @@ class ByFieldUpdateTestSerializer(JsonTranslationPlug, serializers.ModelSerializ
         model = Test
         fields = (
             'id',
+            'bool',
+            'num',
+            'date',
+            'time',
+            'datetime',
+            'duration',
             'text',
             'un',
         )
@@ -36,6 +48,12 @@ class GetTestSerializer(serializers.ModelSerializer):
         model = Test
         fields = (
             'id',
+            'bool',
+            'num',
+            'date',
+            'time',
+            'datetime',
+            'duration',
             'text',
             'un',
         )

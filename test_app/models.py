@@ -3,9 +3,16 @@ from common.audit.models import AuditModel, HistoricalAuditModel
 
 
 class Test(AuditModel):
+    bool = models.BooleanField(null=True, blank=True)
+    num = models.IntegerField(null=True, blank=True)
+    date = models.DateTimeField(null=True, blank=True)
+    time = models.TimeField(null=True, blank=True)
+    datetime = models.DateTimeField(null=True, blank=True)
+    duration = models.DurationField(null=True, blank=True)
     text = models.CharField(max_length=100, null=False, blank=False)
-    un = models.IntegerField()
 
+    un = models.IntegerField()
+    
     # class Meta:
     #     constraints = [
     #         models.UniqueConstraint(
