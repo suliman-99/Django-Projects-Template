@@ -15,6 +15,7 @@ from decouple import config
 from pathlib import Path
 from datetime import timedelta
 from django.utils.translation import gettext_lazy as _
+from corsheaders.defaults import default_headers
 from logger.configuration import LOGGING_DICT
 import firebase_admin
 
@@ -30,6 +31,14 @@ DEBUG = config('DEBUG', cast=bool, default=False)
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=lambda v: [s.strip() for s in v.split(',')])
 CORS_ALLOWED_ORIGINS = config('CORS_ALLOWED_ORIGINS', cast=lambda v: [s.strip() for s in v.split(',')])
 CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', cast=lambda v: [s.strip() for s in v.split(',')])
+
+CORS_ALLOW_HEADERS = (
+    *default_headers,
+    "version",
+    "os-type",
+    "app-type",
+    "app-version",
+)
 
 INTERNAL_IPS = ['127.0.0.1']
 
@@ -202,6 +211,7 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'EXCEPTION_HANDLER': 'common.exception_handler.custom_exception_handler',
+    'DEFAULT_VERSIONING_CLASS': 'common.api_versioning.HeaderVersioning',
     'DEFAULT_PAGINATION_CLASS': 'common.pagination.CustomPageNumberPagination',
     'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend',
