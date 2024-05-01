@@ -1,6 +1,3 @@
-from rest_framework.filters import BaseFilterBackend
-from django.db.models.query_utils import Q
-
 
 _ISNULL = 'isnull'
 _IN = 'in'
@@ -36,35 +33,99 @@ _HOUR = 'hour'
 _MINUTE = 'minute'
 _SECOND = 'second'
 
-_BASE_LOOKUPS= (_ISNULL, _IN, _EXACT)
-_COMPARISON_LOOKUPS = (_LT, _LTE, _GT, _GTE, _RANGE)
-_CHAR_LOOKUPS = (_IEXACT, _CONTAINS, _ICONTAINS, _STARTSWITH, _ISTARTSWITH, _ENDSWITH, _IENDSWITH, _REGEX, _IREGEX)
-_DATE_LOOKUPS = (_YEAR, _ISO_YEAR, _MONTH, _DAY, _WEEK, _WEEK_DAY, _ISO_WEEK_DAY, _QUARTER)
-_TIME_LOOKUPS = (_HOUR, _MINUTE, _SECOND)
-_DATETIME_LOOKUPS = (_DATE, _TIME)
+_BASE_LOOKUPS= (
+    _ISNULL, 
+    _IN, 
+    _EXACT,
+)
+_COMPARISON_LOOKUPS = (
+    _LT, 
+    _LTE, 
+    _GT, 
+    _GTE, 
+    _RANGE,
+)
+_CHAR_LOOKUPS = (
+    _IEXACT, 
+    _CONTAINS, 
+    _ICONTAINS, 
+    _STARTSWITH, 
+    _ISTARTSWITH, 
+    _ENDSWITH, 
+    _IENDSWITH, 
+    _REGEX, 
+    _IREGEX,
+)
+_DATE_LOOKUPS = (
+    _YEAR, 
+    _ISO_YEAR, 
+    _MONTH, 
+    _DAY, 
+    _WEEK,
+    _WEEK_DAY,
+    _ISO_WEEK_DAY, 
+    _QUARTER,
+)
+_TIME_LOOKUPS = (
+    _HOUR, 
+    _MINUTE, 
+    _SECOND,
+)
+_DATETIME_LOOKUPS = (
+    _DATE,
+    _TIME,
+)
 
-_DATE_COMPARISON_LOOKUPS = [F'{_DATE_LOOKUP}__{_COMPARISON_LOOKUP}' for _DATE_LOOKUP in _DATE_LOOKUPS for _COMPARISON_LOOKUP in _COMPARISON_LOOKUPS]
-_TIME_COMPARISON_LOOKUPS = [F'{_TIME_LOOKUP}__{_COMPARISON_LOOKUP}' for _TIME_LOOKUP in _TIME_LOOKUPS for _COMPARISON_LOOKUP in _COMPARISON_LOOKUPS]
-_DATETIME_COMPARISON_LOOKUPS = [F'{_DATETIME_LOOKUP}__{_COMPARISON_LOOKUP}' for _DATETIME_LOOKUP in _DATETIME_LOOKUPS for _COMPARISON_LOOKUP in _COMPARISON_LOOKUPS]
+_DATE_COMPARISON_LOOKUPS = [
+    F'{_DATE_LOOKUP}__{_COMPARISON_LOOKUP}' 
+    for _DATE_LOOKUP in _DATE_LOOKUPS 
+    for _COMPARISON_LOOKUP in _COMPARISON_LOOKUPS
+]
+_TIME_COMPARISON_LOOKUPS = [
+    F'{_TIME_LOOKUP}__{_COMPARISON_LOOKUP}' 
+    for _TIME_LOOKUP in _TIME_LOOKUPS 
+    for _COMPARISON_LOOKUP in _COMPARISON_LOOKUPS
+]
+_DATETIME_COMPARISON_LOOKUPS = [
+    F'{_DATETIME_LOOKUP}__{_COMPARISON_LOOKUP}' 
+    for _DATETIME_LOOKUP in _DATETIME_LOOKUPS 
+    for _COMPARISON_LOOKUP in _COMPARISON_LOOKUPS
+]
 
 class FilterLookupExpr:
     OTHER = _BASE_LOOKUPS
     BOOLEAN = _BASE_LOOKUPS
-    NUMBER = (*_BASE_LOOKUPS, *_COMPARISON_LOOKUPS)
-    DATE = (*_BASE_LOOKUPS, *_COMPARISON_LOOKUPS, *_DATE_LOOKUPS, *_DATE_COMPARISON_LOOKUPS)
-    TIME = (*_BASE_LOOKUPS, *_COMPARISON_LOOKUPS, *_TIME_LOOKUPS, *_TIME_COMPARISON_LOOKUPS)
-    DATETIME = (*_BASE_LOOKUPS, *_COMPARISON_LOOKUPS, *_DATETIME_LOOKUPS, *_DATETIME_COMPARISON_LOOKUPS, *_DATE_LOOKUPS, *_DATE_COMPARISON_LOOKUPS, *_TIME_LOOKUPS, *_TIME_COMPARISON_LOOKUPS)
-    DURATION = (*_BASE_LOOKUPS, *_COMPARISON_LOOKUPS)
-    STRING = (*_BASE_LOOKUPS, *_CHAR_LOOKUPS)
-
-
-class AllFieldsFilterBackend(BaseFilterBackend):
-    def filter_queryset(self, request, queryset, view):
-        filter = Q()
-        
-        for key in request.query_params.keys():
-            values = request.query_params.getlist(key)
-            if key in [field.name for field in view.queryset.model._meta.fields]:
-                filter &= Q( **{ key + '__in': values })
-        
-        return queryset.filter(filter)
+    NUMBER = (
+        *_BASE_LOOKUPS, 
+        *_COMPARISON_LOOKUPS,
+    )
+    DATE = (
+        *_BASE_LOOKUPS, 
+        *_COMPARISON_LOOKUPS, 
+        *_DATE_LOOKUPS, 
+        *_DATE_COMPARISON_LOOKUPS,
+    )
+    TIME = (
+        *_BASE_LOOKUPS, 
+        *_COMPARISON_LOOKUPS, 
+        *_TIME_LOOKUPS, 
+        *_TIME_COMPARISON_LOOKUPS,
+    )
+    DATETIME = (
+        *_BASE_LOOKUPS, 
+        *_COMPARISON_LOOKUPS, 
+        *_DATETIME_LOOKUPS, 
+        *_DATETIME_COMPARISON_LOOKUPS, 
+        *_DATE_LOOKUPS, 
+        *_DATE_COMPARISON_LOOKUPS, 
+        *_TIME_LOOKUPS, 
+        *_TIME_COMPARISON_LOOKUPS,
+    )
+    DURATION = (
+        *_BASE_LOOKUPS, 
+        *_COMPARISON_LOOKUPS,
+    )
+    STRING = (
+        *_BASE_LOOKUPS, 
+        *_CHAR_LOOKUPS,
+    )
