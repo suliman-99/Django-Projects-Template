@@ -4,7 +4,7 @@ from rest_framework.generics import RetrieveAPIView, UpdateAPIView, ListAPIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated
-from common.permissions import ModelPermissions, IsAdmin, IsSuperuser
+from common.rest_framework.permissions import ModelPermissions, IsAdmin, IsSuperuser
 from users.models import User
 from users.filters import PermissionFilter
 from users.serializers import (

@@ -2,7 +2,7 @@ from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework import permissions
 from rest_framework.response import Response
-from common.permissions import ModelPermissions, IsAdmin, IsSuperuser
+from common.rest_framework.permissions import ModelPermissions, IsAdmin, IsSuperuser
 from notification.models import Notification
 from notification.filters import NotificationFilter
 from notification.serializers import (

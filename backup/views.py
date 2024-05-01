@@ -3,7 +3,7 @@ from django.conf import settings
 from django.core.management import call_command
 from django.http.response import HttpResponse
 from rest_framework.generics import RetrieveAPIView
-from common.permissions import IsSuperuser
+from common.rest_framework.permissions import IsSuperuser
 
 
 class Backup(RetrieveAPIView):

@@ -1,5 +1,5 @@
 from rest_framework.generics import ListAPIView
-from common.permissions import IsSuperuser
+from common.rest_framework.permissions import IsSuperuser
 from logger.models import Log
 from logger.serializers import LogSerializer
 from logger.filters import LogFilter

@@ -85,7 +85,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'simple_history.middleware.HistoryRequestMiddleware', # Simple History
-    'common.middlewares.ResponseCoordinatorMiddleware', # ResponseCoordinator
+    'common.rest_framework.middlewares.ResponseCoordinatorMiddleware', # ResponseCoordinator
 ]
 
 ROOT_URLCONF = 'Project_Name.urls'
@@ -200,7 +200,7 @@ AUTH_USER_MODEL = 'users.User'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'common.authentication.HeadersAuthentication',
+        'common.rest_framework.authentication.HeadersAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
@@ -211,9 +211,9 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.BrowsableAPIRenderer',
     ],
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-    'EXCEPTION_HANDLER': 'common.exception_handler.custom_exception_handler',
-    'DEFAULT_VERSIONING_CLASS': 'common.api_versioning.HeaderVersioning',
-    'DEFAULT_PAGINATION_CLASS': 'common.pagination.CustomPageNumberPagination',
+    'EXCEPTION_HANDLER': 'common.rest_framework.exception_handler.custom_exception_handler',
+    'DEFAULT_VERSIONING_CLASS': 'common.rest_framework.api_versioning.HeaderVersioning',
+    'DEFAULT_PAGINATION_CLASS': 'common.rest_framework.pagination.CustomPageNumberPagination',
     'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend',
         'rest_framework.filters.OrderingFilter',

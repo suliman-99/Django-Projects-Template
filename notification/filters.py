@@ -1,5 +1,5 @@
 from django_filters import rest_framework as filters
-from common.filters import FilterLookupExpr
+from common.rest_framework.filters import FilterLookupExpr
 from translation.methods import full_translate
 from notification.models import Notification
 

@@ -1,5 +1,5 @@
 from django_seeding.apis.views import RegisteredSeederViewSet, AppliedSeederViewSet 
-from common.permissions import IsSuperuser
+from common.rest_framework.permissions import IsSuperuser
 
 
 class RegisteredSeederViewSet(RegisteredSeederViewSet):
