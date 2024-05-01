@@ -1,0 +1,8 @@
+
+from Tajra to Template:
+    add Groups and Permissions apis and coordinate users app
+    add needed Headers and coordinate authentication classes
+
+from Template to Tajra:
+    upgrade FilterLookupExpr class
+    upgrade test_app
