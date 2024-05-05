@@ -219,6 +219,19 @@ REST_FRAMEWORK = {
         'rest_framework.filters.OrderingFilter',
         'rest_framework.filters.SearchFilter',
     ],
+    'DEFAULT_THROTTLE_CLASSES': [
+        # 'rest_framework.throttling.AnonRateThrottle',
+        # 'rest_framework.throttling.UserRateThrottle',
+        # 'rest_framework.throttling.ScopedRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'secondly_auth': '2/s',
+        'minutely_auth': '20/m',
+        'hourly_auth': '40/h',
+        'daily_auth': '50/d',
+        # 'anon': '60/min',
+        # 'user': '60/min',
+    }
 }
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
