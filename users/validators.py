@@ -10,6 +10,16 @@ from users.models import User
 def validate_user(user):
     if not user.is_active:
         raise ValidationError(INACTIVE_USER)
+
+
+def validate_email_login(user):
+    validate_user(user)
+    # add any custom email validations here
+
+
+def validate_phone_number_login(user):
+    validate_user(user)
+    # add any custom phone_number validations here
     
 
 def validate_language_code(language_code):
