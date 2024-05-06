@@ -225,12 +225,8 @@ REST_FRAMEWORK = {
         # 'rest_framework.throttling.ScopedRateThrottle',
     ],
     'DEFAULT_THROTTLE_RATES': {
-        'secondly_auth': '2/s',
-        'minutely_auth': '20/m',
-        'hourly_auth': '40/h',
-        'daily_auth': '50/d',
         # 'anon': '60/min',
-        # 'user': '60/min',
+        # 'user': '100/min',
     }
 }
 

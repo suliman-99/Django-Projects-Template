@@ -1,17 +1,25 @@
 from rest_framework import throttling 
 
 
-class SecondlyAuthThrottle(throttling.UserRateThrottle):
-    scope = 'secondly_auth'
+class BaseAuthThrottle(throttling.SimpleRateThrottle):
+    def get_cache_key(self, request, view):
+        return self.cache_format % {
+            'scope': self.rate,
+            'ident': self.get_ident(request)
+        }
 
 
-class MinutelyAuthThrottle(throttling.UserRateThrottle):
-    scope = 'minutely_auth'
+class SecondlyAuthThrottle(BaseAuthThrottle):
+    rate = '2/s'
 
 
-class HourlyAuthThrottle(throttling.UserRateThrottle):
-    scope = 'hourly_auth'
+class MinutelyAuthThrottle(BaseAuthThrottle):
+    rate = '20/m'
 
 
-class DailyAuthThrottle(throttling.UserRateThrottle):
-    scope = 'daily_auth'
+class HourlyAuthThrottle(BaseAuthThrottle):
+    rate = '40/h'
+
+
+class DailyAuthThrottle(BaseAuthThrottle):
+    rate = '50/d'
