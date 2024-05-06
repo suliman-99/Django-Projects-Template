@@ -17,7 +17,7 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, re_path, include
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 
 
@@ -42,7 +42,7 @@ docs_patterns = [
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include(app_patterns)),
+    re_path(r'^api/(v(?P<version>\d+)/)?', include(app_patterns)),
 ]
 
 

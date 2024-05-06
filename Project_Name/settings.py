@@ -212,7 +212,7 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'EXCEPTION_HANDLER': 'common.rest_framework.exception_handler.custom_exception_handler',
-    'DEFAULT_VERSIONING_CLASS': 'common.rest_framework.api_versioning.HeaderVersioning',
+    'DEFAULT_VERSIONING_CLASS': 'common.rest_framework.api_versioning.CustomURLPathVersioning',
     'DEFAULT_PAGINATION_CLASS': 'common.rest_framework.pagination.CustomPageNumberPagination',
     'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend',
