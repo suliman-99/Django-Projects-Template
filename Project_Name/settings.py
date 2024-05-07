@@ -34,7 +34,6 @@ CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', cast=lambda v: [s.strip() 
 
 CORS_ALLOW_HEADERS = (
     *default_headers,
-    "version",
     "os-type",
     "app-type",
     "app-version",
