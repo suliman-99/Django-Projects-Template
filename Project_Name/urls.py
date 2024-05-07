@@ -18,8 +18,11 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, re_path, include
-from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
-
+from common.rest_framework.drf_spectacular import (
+    CustomSpectacularAPIView,
+    CustomSpectacularRedocView,
+    CustomSpectacularSwaggerView,
+)
 
 app_patterns = [
     path('seeder/', include('seeder.urls')),
@@ -34,9 +37,9 @@ app_patterns = [
 
 
 docs_patterns = [
-    path('schema/', SpectacularAPIView.as_view(), name='schema'),
-    path('swagger/', SpectacularSwaggerView.as_view(), name='swagger'),
-    path('redoc/', SpectacularRedocView.as_view(), name='redoc'),
+    path('schema/', CustomSpectacularAPIView.as_view(), name='schema'),
+    path('redoc/', CustomSpectacularRedocView.as_view(), name='redoc'),
+    path('swagger/', CustomSpectacularSwaggerView.as_view(), name='swagger'),
 ]
 
 

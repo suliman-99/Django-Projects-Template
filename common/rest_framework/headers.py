@@ -3,37 +3,31 @@ from rest_framework.exceptions import NotAcceptable
 
 # -------------------------------------------------------------------------------------------------
 
-OS_TYPE_ANDROID = 1
-OS_TYPE_IOS = 2
-OS_TYPE_WEB = 3
-OS_TYPE_WINDOWS = 4
-OS_TYPE_LINUX = 5
-OS_TYPE_MAC = 6
+OS_TYPE_ANDROID = 1 # "Android",
+OS_TYPE_IOS = 2 # "IOS",
+OS_TYPE_WEB = 3 # "Web",
+OS_TYPE_WINDOWS = 4 # "Windows",
+OS_TYPE_LINUX = 5 # "Linux",
+OS_TYPE_MAC = 6 # "Mac",
 
-OS_TYPE_CHOICES = (
-    (OS_TYPE_ANDROID, "Android"),
-    (OS_TYPE_IOS, "IOS"),
-    (OS_TYPE_WEB, "Web"),
-    (OS_TYPE_WINDOWS, "Windows"),
-    (OS_TYPE_LINUX, "Linux"),
-    (OS_TYPE_MAC, "Mac"),
+OS_TYPE_VALUES = (
+    OS_TYPE_ANDROID,
+    OS_TYPE_IOS,
+    OS_TYPE_WEB,
+    OS_TYPE_WINDOWS,
+    OS_TYPE_LINUX,
+    OS_TYPE_MAC,
 )
-
-OS_TYPE_VALUES = [t[0] for t in OS_TYPE_CHOICES]
-OS_TYPE_NAMES = [t[1] for t in OS_TYPE_CHOICES]
 
 # -------------------------------------------------------------------------------------------------
 
-APP_TYPE_ADMIN = 1
-APP_TYPE_USER = 2
+APP_TYPE_ADMIN = 1 # "Admin",
+APP_TYPE_USER = 2 # "User",
 
-APP_TYPE_CHOICES = (
-    (APP_TYPE_ADMIN, "Admin"),
-    (APP_TYPE_USER, "User"),
+APP_TYPE_VALUES = (
+    APP_TYPE_ADMIN,
+    APP_TYPE_USER,
 )
-
-APP_TYPE_VALUES = [t[0] for t in APP_TYPE_CHOICES]
-APP_TYPE_NAMES = [t[1] for t in APP_TYPE_CHOICES]
 
 # -------------------------------------------------------------------------------------------------
 
@@ -41,9 +35,9 @@ def validation_decorator(name):
     def return_decorator(method):
         def decorated_method(value):
             if not value:
-                if settings.DEBUG:
-                    return None
-                raise NotAcceptable(f'{name} is required in the header.')
+                if settings.RAISE_EXCEPTION_FOR_MISSED_HEADER:
+                    raise NotAcceptable(f'{name} is required in the header.')
+                return None
             try:
                 return method(value)
             except ValueError:
@@ -55,7 +49,7 @@ def validation_decorator(name):
 
 @validation_decorator('os-type')
 def validate_os_type(value: str) -> None:
-    value = int(value)
+    value = int(value) # delete this if the os-type is string not int
     if value not in OS_TYPE_VALUES:
         raise ValueError()
     return value
@@ -63,7 +57,7 @@ def validate_os_type(value: str) -> None:
 
 @validation_decorator('app-type')
 def validate_app_type(value: str) -> None:
-    value = int(value)
+    value = int(value) # delete this if the app-type is string not int
     if value not in APP_TYPE_VALUES:
         raise ValueError()
     return value

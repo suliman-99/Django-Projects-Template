@@ -260,6 +260,7 @@ if ACTIVATE_FIREBASE:
     GOOGLE_APPLICATION = firebase_admin.initialize_app(GOOGLE_APPLICATION_CREDENTIALS_OBJECT)
 
 ACTIVATE_TWILIO = config('ACTIVATE_TWILIO', cast=bool, default=True)
+ACCEPT_ANY_CODE_WHEN_TWILIO_IS_OFF = config('ACCEPT_ANY_CODE_WHEN_TWILIO_IS_OFF', cast=bool, default=False)
 if ACTIVATE_TWILIO:
     TWILIO_ACCOUNT_SID = config('TWILIO_ACCOUNT_SID')
     TWILIO_AUTH_TOKEN = config('TWILIO_AUTH_TOKEN')
@@ -274,6 +275,8 @@ SEEDING_ON_RUNSERVER = config('SEEDING_ON_RUNSERVER', cast=bool, default=True)
 DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
 DBBACKUP_STORAGE_OPTIONS = {'location': 'backup/backups/'}
 BACKUP_FILE_PREFIX = config('BACKUP_FILE_PREFIX', cast=str, default='project_name')
+
+RAISE_EXCEPTION_FOR_MISSED_HEADER = config('RAISE_EXCEPTION_FOR_MISSED_HEADER', cast=bool, default=False)
 
 if DEBUG:
     INSTALLED_APPS += ['debug_toolbar']
