@@ -25,6 +25,7 @@ django-phonenumber-field = {extras = ["phonenumbers"], version = "*"}
 django-simple-history = "*"
 django-safedelete = "*"
 django-modeltranslation = "*"
+django-apscheduler = "*"
 
 [dev-packages]
 

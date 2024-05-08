@@ -65,12 +65,14 @@ INSTALLED_APPS = [
     'corsheaders',
     'dbbackup',
     'fcm_django',
+    'django_apscheduler',
 
     'logger',
     'content_type',
     'notification',
     'seeder',
     'test_app',
+    'scheduler',
 ]
 
 MIDDLEWARE = [
