@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from firebase_admin import messaging
 from fcm_django.models import FCMDevice
+from translation.methods import get_default_language_code
 from translation.fields import UpdateTranslationField
 from translation.plugs import JsonTranslationPlug
 from notification.models import Notification
@@ -99,3 +100,19 @@ def push_notifications(
             users=users,
             data=validated_notification_data,
         )
+
+
+def default_translated_push_notifications(
+        users: list,
+        data: dict,
+        save: bool = True,
+    ):
+    default_language_code = get_default_language_code()
+    data.setdefault('title', data.get(f'title_{default_language_code}'))
+    data.setdefault('body', data.get(f'body_{default_language_code}'))
+    data.setdefault('image', data.get(f'image_{default_language_code}'))
+    push_notifications(
+        users=users,
+        data=data,
+        save=save,
+    )
