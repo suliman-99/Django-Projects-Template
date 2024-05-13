@@ -1,7 +1,15 @@
 from uuid import uuid4
 from django.db import models
-from safedelete.models import SafeDeleteModel, SOFT_DELETE_CASCADE
 from simple_history.models import HistoricalRecords
+from safedelete.models import (
+    SOFT_DELETE_CASCADE,
+    SafeDeleteModel, 
+    SafeDeleteManager,
+    SafeDeleteAllManager,
+    SafeDeleteDeletedManager,
+)
+from common.signals.querysets import BulkSignalQuerySet
+
 
 
 class AuditModel(SafeDeleteModel):
@@ -17,6 +25,10 @@ class AuditModel(SafeDeleteModel):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     created_at = models.DateTimeField(null=True, blank=True, auto_now_add=True)
     updated_at = models.DateTimeField(null=True, blank=True, auto_now=True)
+
+    objects = SafeDeleteManager(BulkSignalQuerySet)
+    all_objects = SafeDeleteAllManager(BulkSignalQuerySet)
+    deleted_objects = SafeDeleteDeletedManager(BulkSignalQuerySet)
 
 
 class HistoricalAuditModel(AuditModel):
