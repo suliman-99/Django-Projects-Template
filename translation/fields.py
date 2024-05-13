@@ -3,12 +3,20 @@ from rest_framework import serializers, exceptions
 from translation.methods import get_field_name, get_languages_codes
 
 
+def make_dict_and_set_in_base(data):
+    return {'base': data}
+
+
 def coordinate_string_json(translation_data):
-        if isinstance(translation_data, str):
+        if translation_data is None:
+            return make_dict_and_set_in_base(translation_data)
+        
+        elif isinstance(translation_data, str):
             try:
-                translation_data = json.loads(translation_data)
+                return json.loads(translation_data)
             except:
-                translation_data = {'base': translation_data}
+                return make_dict_and_set_in_base(translation_data)
+            
         return translation_data
 
 
