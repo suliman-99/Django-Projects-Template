@@ -18,23 +18,29 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, re_path, include
+from common.rest_framework.api_versioning import OPTIONAL_VERSION
 from common.rest_framework.drf_spectacular import (
     CustomSpectacularAPIView,
     CustomSpectacularRedocView,
     CustomSpectacularSwaggerView,
 )
 
-app_patterns = [
+structure_app_patterns = [
     path('seeder/', include('seeder.urls')),
     path('logger/', include('logger.urls')),
     path('content-type/', include('content_type.urls')),
-    path('users/', include('users.urls')),
     path('translation/', include('translation.urls')),
     path('notification/', include('notification.urls')),
     path('backup/', include('backup.urls')),
     path('test-app/', include('test_app.urls')),
+    path('users/', include('users.urls')),
 ]
 
+custom_app_patterns = [
+
+]
+
+app_patterns = structure_app_patterns + custom_app_patterns
 
 docs_patterns = [
     path('schema/', CustomSpectacularAPIView.as_view(), name='schema'),
@@ -42,12 +48,11 @@ docs_patterns = [
     path('swagger/', CustomSpectacularSwaggerView.as_view(), name='swagger'),
 ]
 
-
 urlpatterns = [
     path('admin/', admin.site.urls),
-    re_path(r'^api/(v(?P<version>\d+)/)?', include(app_patterns)),
+    path('i18n/', include('django.conf.urls.i18n')),
+    re_path(rf'^api/{OPTIONAL_VERSION}', include(app_patterns)),
 ]
-
 
 if settings.DEBUG:
     urlpatterns += [
