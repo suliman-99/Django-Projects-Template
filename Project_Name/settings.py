@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 import os
+import json
 from decouple import config
 from pathlib import Path
 from datetime import timedelta
@@ -234,8 +235,8 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('JWT'),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=config('REFRESH_TOKEN_LIFETIME', cast=int, default=30)),
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=config('ACCESS_TOKEN_LIFETIME', cast=int, default=1)),
+    'REFRESH_TOKEN_LIFETIME': timedelta(**config('REFRESH_TOKEN_LIFETIME', cast=json.loads, default={'days': 30})),
+    'ACCESS_TOKEN_LIFETIME': timedelta(**config('ACCESS_TOKEN_LIFETIME', cast=json.loads, default={'hours': 3})),
     "UPDATE_LAST_LOGIN": True,
 }
 
