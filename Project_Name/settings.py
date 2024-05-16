@@ -160,7 +160,6 @@ AUTH_PASSWORD_VALIDATORS = [
 USE_TZ = True
 TIME_ZONE = 'UTC'
 
-
 USE_I18N = True
 LANGUAGES = (
     ('en', _('English')),
@@ -235,8 +234,8 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('JWT'),
-    'REFRESH_TOKEN_LIFETIME': timedelta(config('REFRESH_TOKEN_LIFETIME', cast=int, default=30)),
-    'ACCESS_TOKEN_LIFETIME': timedelta(config('ACCESS_TOKEN_LIFETIME', cast=int, default=1)),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=config('REFRESH_TOKEN_LIFETIME', cast=int, default=30)),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=config('ACCESS_TOKEN_LIFETIME', cast=int, default=1)),
     "UPDATE_LAST_LOGIN": True,
 }
 
@@ -279,11 +278,6 @@ BACKUP_FILE_PREFIX = config('BACKUP_FILE_PREFIX', cast=str, default='project_nam
 
 RAISE_EXCEPTION_FOR_MISSED_HEADER = config('RAISE_EXCEPTION_FOR_MISSED_HEADER', cast=bool, default=False)
 
-if DEBUG:
-    INSTALLED_APPS += ['debug_toolbar']
-    MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware']
-    AUTH_PASSWORD_VALIDATORS = []
-
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Project_Name API',
     'DESCRIPTION': 'Project_Name description',
@@ -291,3 +285,8 @@ SPECTACULAR_SETTINGS = {
     'SERVE_INCLUDE_SCHEMA': False,
     # OTHER SETTINGS
 }
+
+if DEBUG:
+    INSTALLED_APPS += ['debug_toolbar']
+    MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware']
+    AUTH_PASSWORD_VALIDATORS = []
