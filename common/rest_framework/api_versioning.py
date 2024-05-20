@@ -6,6 +6,5 @@ class CustomURLPathVersioning(versioning.URLPathVersioning):
     version_param = 'version'
 
 
-
-VERSION = 'v(?P<version>\d+)/'
-OPTIONAL_VERSION = '(v(?P<version>\d+)/)?'
+VERSION = r'v(?P<version>\d+)/'
+OPTIONAL_VERSION = r'(v(?P<version>\d+)/)?'
