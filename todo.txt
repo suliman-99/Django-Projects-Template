@@ -1,7 +1,0 @@
-
-from Tajra to Template:
-    add Groups and Permissions apis and coordinate users app
-
-from Template to Tajra:
-    upgrade FilterLookupExpr class
-    upgrade test_app
