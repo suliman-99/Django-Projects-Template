@@ -8,7 +8,7 @@ from safedelete.models import (
     SafeDeleteAllManager,
     SafeDeleteDeletedManager,
 )
-from common.signals.querysets import BulkSignalQuerySet
+from common.audit.querysets import SafeDeleteBulkSignalQuerySet
 
 
 
@@ -26,9 +26,9 @@ class AuditModel(SafeDeleteModel):
     created_at = models.DateTimeField(null=True, blank=True, auto_now_add=True)
     updated_at = models.DateTimeField(null=True, blank=True, auto_now=True)
 
-    objects = SafeDeleteManager(BulkSignalQuerySet)
-    all_objects = SafeDeleteAllManager(BulkSignalQuerySet)
-    deleted_objects = SafeDeleteDeletedManager(BulkSignalQuerySet)
+    objects = SafeDeleteManager(SafeDeleteBulkSignalQuerySet)
+    all_objects = SafeDeleteAllManager(SafeDeleteBulkSignalQuerySet)
+    deleted_objects = SafeDeleteDeletedManager(SafeDeleteBulkSignalQuerySet)
 
 
 class HistoricalAuditModel(AuditModel):
