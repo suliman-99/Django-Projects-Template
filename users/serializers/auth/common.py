@@ -9,6 +9,7 @@ from users.models import User
 from users.validators import validate_user, validate_user_code
 from users.methods import get_tokens
 from users.serializers.auth.base import AuthUserSerializer
+from users.verification.email import send_verification_code_email_message_to_user
 from users.verification.phone_number import send_verification_code_phone_number_message_to_user
 
 
@@ -29,7 +30,10 @@ class SignUpSerializer(serializers.ModelSerializer):
         validated_data = super().validate(attrs)
         validate_password(validated_data['password'])
         user:User = User.objects.create_user(**validated_data)
-        send_verification_code_phone_number_message_to_user(user)
+        if user.email:
+            send_verification_code_email_message_to_user(user)
+        if user.phone_number:
+            send_verification_code_phone_number_message_to_user(user)
         return AuthUserSerializer(user, context=self.context).data
 
 
