@@ -67,7 +67,7 @@ class NotificationSerializer(JsonTranslationPlug, serializers.ModelSerializer):
 
     title = UpdateTranslationField(base_is_enough=True)
     body = UpdateTranslationField(base_is_enough=True)
-    image = UpdateTranslationField(base_is_enough=True)
+    image = UpdateTranslationField(required_languages=[])
 
 
 def push_notifications(
