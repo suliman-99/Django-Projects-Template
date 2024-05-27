@@ -74,6 +74,7 @@ INSTALLED_APPS = [
     'seeder',
     'test_app',
     'scheduler',
+    'system_info',
 ]
 
 MIDDLEWARE = [

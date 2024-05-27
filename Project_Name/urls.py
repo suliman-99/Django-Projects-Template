@@ -34,6 +34,7 @@ structure_app_patterns = [
     path('backup/', include('backup.urls')),
     path('test-app/', include('test_app.urls')),
     path('users/', include('users.urls')),
+    path('system-info/', include('system_info.urls')),
 ]
 
 custom_app_patterns = [
