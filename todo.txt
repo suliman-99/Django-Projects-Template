@@ -1,6 +1,4 @@
 
-system info app
-feed back app
 national app
 reminder app
 
