@@ -4,7 +4,7 @@ from rest_framework import throttling
 class BaseAuthThrottle(throttling.SimpleRateThrottle):
     def get_cache_key(self, request, view):
         return self.cache_format % {
-            'scope': self.rate,
+            'scope': f'Auth_{self.rate}',
             'ident': self.get_ident(request)
         }
 
