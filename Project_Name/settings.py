@@ -75,6 +75,7 @@ INSTALLED_APPS = [
     'test_app',
     'scheduler',
     'system_info',
+    'feedback',
 ]
 
 MIDDLEWARE = [

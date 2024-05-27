@@ -35,6 +35,7 @@ structure_app_patterns = [
     path('test-app/', include('test_app.urls')),
     path('users/', include('users.urls')),
     path('system-info/', include('system_info.urls')),
+    path('feedback/', include('feedback.urls')),
 ]
 
 custom_app_patterns = [
