@@ -76,4 +76,6 @@ class PhoneNumberLogInSerializer(serializers.Serializer):
         ret = AuthUserSerializer(user, context=self.context).data
         if user.phone_number_verified:
             ret.update(login(user))
+        else:
+            send_verification_code_phone_number_message_to_user(user)
         return ret

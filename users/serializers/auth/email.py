@@ -72,4 +72,6 @@ class EmailLogInSerializer(serializers.Serializer):
         ret = AuthUserSerializer(user, context=self.context).data
         if user.email_verified:
             ret.update(login(user))
+        else:
+            send_verification_code_email_message_to_user(user)
         return ret
