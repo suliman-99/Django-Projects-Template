@@ -72,5 +72,7 @@ class MyNotificationViewSet(viewsets.ModelViewSet):
     
     @action(detail=False, methods=['put'], url_path='mark-all-as-viewed')
     def mark_all_as_viewed(self, request, *args, **kwargs):
-        self.get_queryset().filter(is_viewed=False).update(is_viewed=True)
+        queryset = self.filter_queryset(self.get_queryset())
+        print(queryset)
+        queryset.filter(is_viewed=False).update(is_viewed=True)
         return Response({})

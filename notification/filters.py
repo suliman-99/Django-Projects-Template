@@ -8,6 +8,7 @@ class NotificationFilter(filters.FilterSet):
     class Meta:
         model = Notification
         fields = {
+            'id': FilterLookupExpr.OTHER,
             'user': FilterLookupExpr.OTHER,
             'is_viewed': FilterLookupExpr.BOOLEAN,
             **full_translate('title', FilterLookupExpr.STRING),
