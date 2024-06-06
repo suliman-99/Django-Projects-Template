@@ -3,6 +3,7 @@ from rest_framework.decorators import action
 from rest_framework import permissions
 from rest_framework.response import Response
 from common.rest_framework.permissions import ModelPermissions, IsAdmin, IsSuperuser
+from common.rest_framework.pagination import CustomLimitOffsetPagination
 from notification.models import Notification
 from notification.filters import NotificationFilter
 from notification.serializers import (
@@ -41,6 +42,7 @@ class MyNotificationViewSet(viewsets.ModelViewSet):
     http_method_names = ['get', 'put']
     permission_classes = (permissions.IsAuthenticated, )
     filterset_class = NotificationFilter
+    pagination_class = CustomLimitOffsetPagination
     search_fields = (
         'title',
         'body',
