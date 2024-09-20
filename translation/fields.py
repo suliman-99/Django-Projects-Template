@@ -1,6 +1,6 @@
 import json
 from rest_framework import serializers, exceptions
-from translation.methods import get_field_name, get_languages_codes
+from .methods import get_field_name, get_languages_codes
 
 
 def make_dict_and_set_in_base(data):

@@ -42,3 +42,10 @@ def translation_field_required_kwargs(name, with_base=False):
 
 def full_translation_field_required_kwargs(name):
     return translation_field_required_kwargs(name, True)
+
+
+def get_field_translation_data_as_json(data, field_name):
+    return {
+        language_code: data.get(get_field_name(field_name, language_code))
+        for language_code in get_languages_codes(with_base=True)
+    }

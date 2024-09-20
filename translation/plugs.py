@@ -1,5 +1,5 @@
-from translation.fields import UpdateTranslationField
 from rest_framework import serializers
+from .fields import UpdateTranslationField
 
 
 class JsonTranslationPlug(serializers.ModelSerializer):

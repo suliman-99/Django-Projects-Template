@@ -1,5 +1,5 @@
 from django.urls import path
-from translation.views import LanguageListAPIView
+from .views import LanguageListAPIView
 
 
 urlpatterns = [
