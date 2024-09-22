@@ -5,7 +5,7 @@ from django.db.models.signals import (
     pre_delete,
     post_delete,
 )
-from common.signals import (
+from signals import (
     pre_bulk_create,
     post_bulk_create,
     pre_bulk_update,

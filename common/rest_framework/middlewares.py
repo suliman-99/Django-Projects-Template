@@ -1,7 +1,7 @@
 import json
 from rest_framework.response import Response
-from common.rest_framework.pagination import PAGINATION_FLAG
-from common.response_templates import TEMPLATE_FLAG, success_response, fail_response
+from .pagination import PAGINATION_FLAG
+from ..response_templates import TEMPLATE_FLAG, success_response, fail_response
 
 
 class ResponseCoordinatorMiddleware:

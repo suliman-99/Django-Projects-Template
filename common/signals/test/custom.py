@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.dispatch import receiver
-from common.signals import (
+from ...signals import (
     pre_bulk_create,
     post_bulk_create,
     pre_bulk_update,

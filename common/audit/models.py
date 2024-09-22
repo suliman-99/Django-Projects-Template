@@ -9,7 +9,7 @@ from safedelete.models import (
     # SafeDeleteAllManager,
     # SafeDeleteDeletedManager,
 )
-# from common.audit.querysets import SafeDeleteBulkSignalQuerySet
+# from ..audit.querysets import SafeDeleteBulkSignalQuerySet
 
 
 User = settings.AUTH_USER_MODEL
