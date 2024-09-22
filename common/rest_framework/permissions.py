@@ -30,6 +30,19 @@ class ModelPermissions(permissions.BasePermission):
         return request.user.has_perms(perms)
 
 
+class RequiredPermissions(permissions.BasePermission):
+    def has_permission(self, request, view):
+        perms = getattr(view, 'permission_required', None)
+
+        if isinstance(perms, str):
+            perms = (perms, )
+
+        if perms is None:
+            perms = []
+
+        return request.user.has_perms(perms)
+
+
 class MethodBasedRequiredPermissions(permissions.BasePermission):
     def has_permission(self, request, view):
         perms = getattr(view, 'permission_required', None)
