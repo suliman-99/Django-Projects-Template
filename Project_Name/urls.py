@@ -28,6 +28,8 @@ from common.rest_framework.drf_spectacular import (
 structure_app_patterns = [
     path('seeder/', include('seeder.urls')),
     path('logger/', include('logger.urls')),
+    path('enums/', include('enums.urls')),
+    path('uploader/', include('uploader.urls')),
     path('content-type/', include('content_type.urls')),
     path('translation/', include('translation.urls')),
     path('notification/', include('notification.urls')),

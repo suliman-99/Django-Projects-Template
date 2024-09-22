@@ -69,6 +69,8 @@ INSTALLED_APPS = [
     'django_apscheduler',
 
     'logger',
+    'enums',
+    'uploader',
     'content_type',
     'notification',
     'seeder',
