@@ -17,33 +17,47 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path, include
-from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
+from django.urls import path, re_path, include
+from common.rest_framework.api_versioning import OPTIONAL_VERSION
+from common.rest_framework.drf_spectacular import (
+    CustomSpectacularAPIView,
+    CustomSpectacularRedocView,
+    CustomSpectacularSwaggerView,
+)
 
-
-app_patterns = [
+structure_app_patterns = [
+    path('seeder/', include('seeder.urls')),
     path('logger/', include('logger.urls')),
+    path('enums/', include('enums.urls')),
+    path('uploader/', include('uploader.urls')),
+    path('fcm/', include('fcm.urls')),
     path('content-type/', include('content_type.urls')),
-    path('users/', include('users.urls')),
     path('translation/', include('translation.urls')),
     path('notification/', include('notification.urls')),
     path('backup/', include('backup.urls')),
     path('test-app/', include('test_app.urls')),
+    path('users/', include('users.urls')),
+    path('system-info/', include('system_info.urls')),
+    path('feedback/', include('feedback.urls')),
 ]
 
+custom_app_patterns = [
+
+]
+
+app_patterns = structure_app_patterns + custom_app_patterns
 
 docs_patterns = [
-    path('schema/', SpectacularAPIView.as_view(), name='schema'),
-    path('swagger/', SpectacularSwaggerView.as_view(), name='swagger'),
-    path('redoc/', SpectacularRedocView.as_view(), name='redoc'),
+    path('schema/', CustomSpectacularAPIView.as_view(), name='schema'),
+    path('redoc/', CustomSpectacularRedocView.as_view(), name='redoc'),
+    path('swagger/', CustomSpectacularSwaggerView.as_view(), name='swagger'),
 ]
-
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include(app_patterns)),
+    path('i18n/', include('django.conf.urls.i18n')),
+    re_path(rf'^api/{OPTIONAL_VERSION}', include(app_patterns)),
 ]
-
 
 if settings.DEBUG:
     urlpatterns += [

@@ -9,7 +9,7 @@ Make sure you have installed all of the following prerequisites on your developm
 
 * Pipenv module:
 
-    after you install python you will have pip installed on your machin automatically
+    after you install python you will have pip installed on your machine automatically
     you can check it by
     ```
     pip --version
@@ -33,8 +33,3 @@ Environment variables:
     * DATABASE_USER
     * DATABASE_PASSWORD
     * DATABASE_NAME
-
-Be aware of these things:
-
-* change field name of a field that has translation values will let these values don't belong to him and will not be returned in the response of this field and you can solve this issue by change the field_name of the needed data in the translation table
-

@@ -2,14 +2,15 @@ from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework import permissions
 from rest_framework.response import Response
-from common.permissions import ModelPermissions, IsAdmin, IsSuperuser
-from notification.models import Notification
-from notification.filters import NotificationFilter
-from notification.serializers import (
+from common.rest_framework.permissions import ModelPermissions, IsAdmin, IsSuperuser
+from common.rest_framework.pagination import CustomLimitOffsetPagination
+from .models import Notification, NotificationTemplate
+from .filters import NotificationFilter
+from .serializers import (
     SendNotificationSerializer,
     GetNotificationSerializer,
-    MarkNotificationAsViewedSerializer,
     FullNotificationSerializer,
+    NotificationTemplateSerializer,
 )
 
 
@@ -21,6 +22,7 @@ class NotificationViewSet(viewsets.ModelViewSet):
     search_fields = (
         'title',
         'body',
+        'extra_data',
     )
     ordering_fields = (
         'is_viewed',
@@ -42,6 +44,7 @@ class MyNotificationViewSet(viewsets.ModelViewSet):
     http_method_names = ['get', 'put']
     permission_classes = (permissions.IsAuthenticated, )
     filterset_class = NotificationFilter
+    pagination_class = CustomLimitOffsetPagination
     search_fields = (
         'title',
         'body',
@@ -54,7 +57,6 @@ class MyNotificationViewSet(viewsets.ModelViewSet):
     serializer_class_action_map = {
         'retrieve': GetNotificationSerializer,
         'list': GetNotificationSerializer,
-        'mark_as_viewed': MarkNotificationAsViewedSerializer,
     }
 
     def get_queryset(self):
@@ -65,9 +67,19 @@ class MyNotificationViewSet(viewsets.ModelViewSet):
     
     @action(detail=True, methods=['put'], url_path='mark-as-viewed')
     def mark_as_viewed(self, request, *args, **kwargs):
-        return self.update(request, *args, **kwargs)
+        instance = self.get_object()
+        instance.is_viewed = True
+        instance.save()
+        return Response({})
     
     @action(detail=False, methods=['put'], url_path='mark-all-as-viewed')
     def mark_all_as_viewed(self, request, *args, **kwargs):
         self.get_queryset().filter(is_viewed=False).update(is_viewed=True)
         return Response({})
+
+
+class NotificationTemplateViewSet(viewsets.ModelViewSet):
+    permission_models = NotificationTemplate
+    permission_classes = (IsAdmin, ModelPermissions)
+    queryset = NotificationTemplate.objects.all()
+    serializer_class = NotificationTemplateSerializer

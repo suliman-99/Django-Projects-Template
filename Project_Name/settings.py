@@ -11,10 +11,12 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 import os
+import json
 from decouple import config
 from pathlib import Path
 from datetime import timedelta
 from django.utils.translation import gettext_lazy as _
+from corsheaders.defaults import default_headers
 from logger.configuration import LOGGING_DICT
 import firebase_admin
 
@@ -31,12 +33,24 @@ ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=lambda v: [s.strip() for s in v.spl
 CORS_ALLOWED_ORIGINS = config('CORS_ALLOWED_ORIGINS', cast=lambda v: [s.strip() for s in v.split(',')])
 CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', cast=lambda v: [s.strip() for s in v.split(',')])
 
+CORS_ALLOW_HEADERS = (
+    *default_headers,
+    "os-type",
+    "app-type",
+    "app-version",
+)
+
 INTERNAL_IPS = ['127.0.0.1']
 
 # Application definition
 INSTALLED_APPS = [
-    'users',
+    'phonenumber_field',
+    'modeltranslation',
+    'safedelete',
+    'simple_history',
     'django_seeding',
+    'users',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -48,20 +62,23 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap4',
     'django_filters',
+    'drf_spectacular',
     'corsheaders',
     'dbbackup',
     'fcm_django',
-    'drf_spectacular',
-    'phonenumber_field',
-    'modeltranslation',
-    'safedelete',
-    'simple_history',
+    'django_apscheduler',
 
     'logger',
-    'content_type',
+    'enums',
+    'uploader',
+    'fcm',
     'notification',
+    'content_type',
     'seeder',
     'test_app',
+    'scheduler',
+    'system_info',
+    'feedback',
 ]
 
 MIDDLEWARE = [
@@ -75,7 +92,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'simple_history.middleware.HistoryRequestMiddleware', # Simple History
-    'common.middlewares.ResponseCoordinatorMiddleware', # ResponseCoordinator
+    'common.rest_framework.middlewares.ResponseCoordinatorMiddleware', # ResponseCoordinator
 ]
 
 ROOT_URLCONF = 'Project_Name.urls'
@@ -149,7 +166,6 @@ AUTH_PASSWORD_VALIDATORS = [
 USE_TZ = True
 TIME_ZONE = 'UTC'
 
-
 USE_I18N = True
 LANGUAGES = (
     ('en', _('English')),
@@ -200,21 +216,31 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.BrowsableAPIRenderer',
     ],
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-    'EXCEPTION_HANDLER': 'common.exception_handler.custom_exception_handler',
-    'DEFAULT_PAGINATION_CLASS': 'common.pagination.CustomPageNumberPagination',
+    'EXCEPTION_HANDLER': 'common.rest_framework.exception_handler.custom_exception_handler',
+    'DEFAULT_VERSIONING_CLASS': 'common.rest_framework.api_versioning.CustomURLPathVersioning',
+    'DEFAULT_PAGINATION_CLASS': 'common.rest_framework.pagination.CustomPageNumberPagination',
     'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend',
         'rest_framework.filters.OrderingFilter',
         'rest_framework.filters.SearchFilter',
     ],
+    'DEFAULT_THROTTLE_CLASSES': [
+        # 'rest_framework.throttling.AnonRateThrottle',
+        # 'rest_framework.throttling.UserRateThrottle',
+        # 'rest_framework.throttling.ScopedRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        # 'anon': '60/min',
+        # 'user': '100/min',
+    }
 }
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('JWT'),
-    'REFRESH_TOKEN_LIFETIME': timedelta(config('REFRESH_TOKEN_LIFETIME', cast=int, default=30)),
-    'ACCESS_TOKEN_LIFETIME': timedelta(config('ACCESS_TOKEN_LIFETIME', cast=int, default=1)),
+    'REFRESH_TOKEN_LIFETIME': timedelta(**config('REFRESH_TOKEN_LIFETIME', cast=json.loads, default={'days': 30})),
+    'ACCESS_TOKEN_LIFETIME': timedelta(**config('ACCESS_TOKEN_LIFETIME', cast=json.loads, default={'hours': 3})),
     "UPDATE_LAST_LOGIN": True,
 }
 
@@ -239,6 +265,7 @@ if ACTIVATE_FIREBASE:
     GOOGLE_APPLICATION = firebase_admin.initialize_app(GOOGLE_APPLICATION_CREDENTIALS_OBJECT)
 
 ACTIVATE_TWILIO = config('ACTIVATE_TWILIO', cast=bool, default=True)
+ACCEPT_ANY_CODE_WHEN_TWILIO_IS_OFF = config('ACCEPT_ANY_CODE_WHEN_TWILIO_IS_OFF', cast=bool, default=False)
 if ACTIVATE_TWILIO:
     TWILIO_ACCOUNT_SID = config('TWILIO_ACCOUNT_SID')
     TWILIO_AUTH_TOKEN = config('TWILIO_AUTH_TOKEN')
@@ -254,10 +281,7 @@ DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
 DBBACKUP_STORAGE_OPTIONS = {'location': 'backup/backups/'}
 BACKUP_FILE_PREFIX = config('BACKUP_FILE_PREFIX', cast=str, default='project_name')
 
-if DEBUG:
-    INSTALLED_APPS += ['debug_toolbar']
-    MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware']
-    AUTH_PASSWORD_VALIDATORS = []
+RAISE_EXCEPTION_FOR_MISSED_HEADER = config('RAISE_EXCEPTION_FOR_MISSED_HEADER', cast=bool, default=False)
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Project_Name API',
@@ -266,3 +290,8 @@ SPECTACULAR_SETTINGS = {
     'SERVE_INCLUDE_SCHEMA': False,
     # OTHER SETTINGS
 }
+
+if DEBUG:
+    INSTALLED_APPS += ['debug_toolbar']
+    MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware']
+    AUTH_PASSWORD_VALIDATORS = []

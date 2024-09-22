@@ -1,40 +1,11 @@
-from django.contrib.auth import get_user_model
-from rest_framework.exceptions import ValidationError
-from firebase_admin import messaging
-from fcm_django.models import FCMDevice
-from translation.methods import get_languages_codes
-from notification.models import Notification
-
-
-User = get_user_model()
-
-
-def clean_notification_data(data: dict) -> dict:
-    cleaned_data = {}
-    for key, value in data.items():
-        if value is not None:
-            cleaned_data[key] = str(value)
-    return cleaned_data
-
-
-def _push_notifications(
-        users: list,
-        title: str,
-        body: str,
-        image: str,
-        **data,
-    ) -> None:
-    data = clean_notification_data(data)
-    FCMDevice.objects.filter(user__in=users).send_message(
-        message=messaging.Message(
-            notification=messaging.Notification(
-                title=title,
-                body=body,
-                image=image,
-            ),
-            data=data,
-        ),
-    )
+from rest_framework import serializers
+from common.audit.serializer import AuditSerializer
+from translation.methods import get_default_language_code, full_translate
+from translation.fields import UpdateTranslationField
+from translation.plugs import JsonTranslationPlug
+from users.methods import get_user_language_code
+from fcm.methods import _push_notifications_for_users
+from .models import Notification, NotificationTemplate
 
 
 def save_notification(
@@ -51,30 +22,22 @@ def save_notification(
     Notification.objects.bulk_create(notifications)
 
 
-def validate_str_value(field, value):
-    if not isinstance(value, str):
-        raise ValidationError(f'{field} must be str.')
+class NotificationSerializer(JsonTranslationPlug, serializers.ModelSerializer):
+    class Meta:
+        model = Notification
+        fields = (
+            'role',
+            'title',
+            'body',
+            'image',
+            'object_type',
+            'object_id',
+            'extra_data',
+        )
 
-
-def validate_translated_field(notification_data, field):
-    value = notification_data.get(field)
-    if value:
-        validate_str_value(field, value)
-        return
-    
-    for code in get_languages_codes():
-        field_code = f'{field}_{code}'
-        value = notification_data.get(field_code)
-        if not value:
-            translated_fields = [f'{field}_{code}' for code in get_languages_codes()]
-            raise ValidationError(f'if {field} is not provided then {translated_fields} are required.')
-        validate_str_value(field_code, value)
-
-
-def validate_notification_data(notification_data):
-    validate_translated_field(notification_data, 'title')
-    validate_translated_field(notification_data, 'body')
-    validate_translated_field(notification_data, 'image')
+    title = UpdateTranslationField(base_is_enough=True)
+    body = UpdateTranslationField(base_is_enough=True)
+    image = UpdateTranslationField(required_languages=[])
 
 
 def push_notifications(
@@ -82,29 +45,85 @@ def push_notifications(
         save: bool = True,
         **data,
     ):
-    validate_notification_data(data)
+    notification_serializer = NotificationSerializer(data=data)
+    notification_serializer.is_valid(raise_exception=True)
+    validated_notification_data = notification_serializer.validated_data
 
     language_code_map = {}
     for user in users:
-        language_code_map.setdefault(user.language_code, []).append(user)
+        language_code_map.setdefault(get_user_language_code(user), []).append(user)
 
-    title = data.pop('title', None)
-    body = data.pop('body', None)
-    image = data.pop('image', None)
+    title = validated_notification_data.get('title', None)
+    body = validated_notification_data.get('body', None)
+    image = validated_notification_data.get('image', None)
+
+    role = validated_notification_data.get('role')
+
     for language_code, temp_users in language_code_map.items():
-        _push_notifications(
-            temp_users,
-            title=data.get(f'title_{language_code}', title),
-            body=data.get(f'body_{language_code}', body),
-            image=data.get(f'image_{language_code}', image),
-            **data,
+        _push_notifications_for_users(
+            users=temp_users,
+            role=role,
+            title=validated_notification_data.get(f'title_{language_code}', title),
+            body=validated_notification_data.get(f'body_{language_code}', body),
+            image=validated_notification_data.get(f'image_{language_code}', image),
+            data=validated_notification_data,
         )
-    
+
     if save:
         save_notification(
             users=users,
-            title=title,
-            body=body,
-            image=image,
-            **data,
+            **validated_notification_data,
         )
+
+
+def default_translated_push_notifications(
+        users: list,
+        save: bool = True,
+        **data,
+    ):
+    default_language_code = get_default_language_code()
+    data.setdefault('title', data.get(f'title_{default_language_code}'))
+    data.setdefault('body', data.get(f'body_{default_language_code}'))
+    data.setdefault('image', data.get(f'image_{default_language_code}'))
+    push_notifications(
+        users=users,
+        save=save,
+        **data,
+    )
+
+
+class NotificationTemplateDataExtractorSerializer(AuditSerializer):
+    class Meta:
+        model = NotificationTemplate
+        fields = (
+            *full_translate('title'),
+            *full_translate('body'),
+            *full_translate('image'),
+
+            'extra_data',
+        )
+
+
+def get_notification_template_by_type(type):
+    return NotificationTemplate.objects.filter(type=type).first()
+
+
+def push_notification_by_template(template, users, role, object_type, object_id):
+    if template:
+        push_notifications(
+            users=users,
+            role=role,
+            object_type=object_type,
+            object_id=str(object_id),
+            **NotificationTemplateDataExtractorSerializer(template).data,
+        )
+
+
+def push_notification_by_type(type, users, role, object_type, object_id):
+    push_notification_by_template(
+        template=get_notification_template_by_type(type),
+        users=users,
+        role=role,
+        object_type=object_type,
+        object_id=object_id,
+    )

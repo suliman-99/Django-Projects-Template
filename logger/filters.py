@@ -1,6 +1,6 @@
 from django_filters import rest_framework as filters
-from common.filters import FilterLookupExpr
-from logger.models import Log
+from common.rest_framework.filters import FilterLookupExpr
+from .models import Log
 
 
 class LogFilter(filters.FilterSet):

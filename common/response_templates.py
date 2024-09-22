@@ -8,7 +8,7 @@ def response_template(data, message, error_field, code):
         'code': code,
         'message': message,
         'error_field': error_field,
-        'data': data,
+        'results': data,
         TEMPLATE_FLAG: True,
     }
 

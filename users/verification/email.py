@@ -4,14 +4,14 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.contrib.auth.hashers import make_password
-from common.code_generation import generate_code
-from users.models import User
+from common.code_generation import generate_string_code
+from ..models import User
 
 
 def generate_email_verification_code():
     if settings.EMAIL_VERIFICATION_CODE_ALWAYS_123456:
         return '123456'
-    return generate_code(6)
+    return generate_string_code(6)
 
 
 def _send_verification_code_email_message(name, code, to_email):

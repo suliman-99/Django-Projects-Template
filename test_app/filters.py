@@ -1,13 +1,19 @@
 from django_filters import rest_framework as filters
-from common.filters import FilterLookupExpr
+from common.rest_framework.filters import FilterLookupExpr
 from translation.methods import full_translate
-from test_app.models import Test, SubTest
+from .models import Test, SubTest
 
 
 class UpdateTestFilter(filters.FilterSet):
     class Meta:
         model = Test
         fields = {
+            'bool': FilterLookupExpr.BOOLEAN,
+            'num': FilterLookupExpr.NUMBER,
+            'date': FilterLookupExpr.DATE,
+            'time': FilterLookupExpr.TIME,
+            'datetime': FilterLookupExpr.DATETIME,
+            'duration': FilterLookupExpr.DURATION,
             **full_translate('text', FilterLookupExpr.STRING),
             'un': FilterLookupExpr.NUMBER,
         }
@@ -17,6 +23,12 @@ class GetTestFilter(filters.FilterSet):
     class Meta:
         model = Test
         fields = {
+            'bool': FilterLookupExpr.BOOLEAN,
+            'num': FilterLookupExpr.NUMBER,
+            'date': FilterLookupExpr.DATE,
+            'time': FilterLookupExpr.TIME,
+            'datetime': FilterLookupExpr.DATETIME,
+            'duration': FilterLookupExpr.DURATION,
             'text': FilterLookupExpr.STRING,
             'un': FilterLookupExpr.NUMBER,
         }

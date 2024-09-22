@@ -6,8 +6,8 @@ class DataBaseHandler(Handler):
         super().__init__(level)
     
     def emit(self, record):
-        from logger.models import Log
-        from logger.methods import get_request_type, get_user_from_request, get_html_message
+        from .models import Log
+        from .methods import get_request_type, get_user_from_request, get_html_message
         
         request = getattr(record, 'request', None)
         if request:

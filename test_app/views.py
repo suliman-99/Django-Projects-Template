@@ -1,14 +1,14 @@
 from datetime import datetime
 from django.utils import timezone
+from rest_framework.response import Response
 from rest_framework.generics import CreateAPIView, RetrieveAPIView
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.response import Response
-from common.permissions import IsSuperuser
+from common.rest_framework.permissions import IsSuperuser
 from users.verification.email import _send_verification_code_email_message
 from users.verification.phone_number import _send_verification_code_phone_number_message, check_verification_code_phone_number
-from test_app.models import Test, SubTest
-from test_app.filters import UpdateTestFilter, GetTestFilter, SubTestFilter
-from test_app.serializers import (
+from .models import Test, SubTest
+from .filters import UpdateTestFilter, GetTestFilter, SubTestFilter
+from .serializers import (
     TestTimeModelSerializer,
     UpdateTestSerializer,
     ByFieldUpdateTestSerializer,
@@ -23,6 +23,7 @@ class UpdateTestViewSet(ModelViewSet):
     serializer_class = UpdateTestSerializer
     filterset_class = UpdateTestFilter
     queryset = Test.objects.all()
+
 
 class ByFieldUpdateTestViewSet(ModelViewSet):
     permission_classes = (IsSuperuser,)

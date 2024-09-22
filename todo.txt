@@ -1,0 +1,10 @@
+
+national app
+reminder app
+
+version app (to change the base url depending on the version and the os_type)
+
+celery configurations
+
+CI/CD Pipeline
+Docker

@@ -1,10 +1,10 @@
 from django.db.models.query_utils import Q
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from common.audit.variables import audit_fields, audit_read_only_kwargs
-from translation.methods import full_translate
-from notification.models import Notification
-from notification.methods import push_notifications
+from common.audit.serializer import AuditSerializer
+from translation.methods import translate, translation_field_required_kwargs
+from .models import Notification, NotificationTemplate
+from .methods import push_notifications
 
 
 User = get_user_model()
@@ -12,6 +12,11 @@ User = get_user_model()
 
 class FilterSerializer(serializers.Serializer):
     user_ids = serializers.ListField(required=True, allow_null=True, child=serializers.CharField())
+
+    is_active = serializers.BooleanField(required=False, allow_null=True)
+    # is_superuser = serializers.BooleanField(required=False, allow_null=True)
+    # is_staff = serializers.BooleanField(required=False, allow_null=True)
+
     is_excepting = serializers.BooleanField(required=True)
 
 
@@ -21,12 +26,17 @@ class SendNotificationSerializer(serializers.Serializer):
     notification = serializers.JSONField()
 
     def get_users(self, filter_data):
-        user_ids = filter_data.get('user_ids')
-        is_excepting = filter_data.get('is_excepting')
+        user_ids = filter_data.pop('user_ids', None)
+        is_excepting = filter_data.pop('is_excepting', None)
 
         filter = Q()
+
         if user_ids:
             filter &= Q(id__in=user_ids)
+
+        if filter_data:
+            filter &= Q(**filter_data)
+            
         if is_excepting:
             filter = ~filter
 
@@ -34,7 +44,7 @@ class SendNotificationSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         push_notifications(
-            users=self.get_users(validated_data['filter']),
+            users=self.get_users(validated_data.pop('filter')),
             save=validated_data['save'],
             **validated_data['notification'],
         )
@@ -44,47 +54,59 @@ class SendNotificationSerializer(serializers.Serializer):
         return {}
 
 
-class GetNotificationSerializer(serializers.ModelSerializer):
+class GetNotificationSerializer(AuditSerializer):
     class Meta:
         model = Notification
         fields = (
             'id', 
+            'user',
+            'role',
             'title', 
             'body', 
             'image', 
+            'object_type',
+            'object_id',
+            'extra_data',
             'is_viewed', 
             'created_at',
+            'updated_at',
         )
 
 
-class MarkNotificationAsViewedSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Notification
-        fields = []
-
-    def update(self, instance, validated_data):
-        instance.is_viewed = True
-        instance.save()
-        return instance
-    
-    def to_representation(self, instance):
-        return GetNotificationSerializer(instance, context=self.context).data
-    
-
-class FullNotificationSerializer(serializers.ModelSerializer):
+class FullNotificationSerializer(AuditSerializer):
     class Meta:
         model = Notification
         fields = (
             'id',
             'user',
+            'role',
+            'title',
+            'body',
+            'image',
+            'object_type',
+            'object_id',
+            'extra_data',
             'is_viewed',
+            'created_at',
+            'updated_at',
+        )
 
-            *full_translate('title'),
-            *full_translate('body'),
-            *full_translate('image'),
-            
-            *audit_fields,
+
+class NotificationTemplateSerializer(AuditSerializer):
+    class Meta:
+        model = NotificationTemplate
+        fields = (
+            'id',
+
+            'type',
+
+            *translate('title'),
+            *translate('body'),
+            *translate('image'),
+
+            'extra_data',
         )
         extra_kwargs = {
-            **audit_read_only_kwargs
+            **translation_field_required_kwargs('title'),
+            **translation_field_required_kwargs('body'),
         }

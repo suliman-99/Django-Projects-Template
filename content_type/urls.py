@@ -1,5 +1,5 @@
 from rest_framework.routers import DefaultRouter
-from content_type.views import ContentTypeViewSet
+from .views import ContentTypeViewSet
 
 
 router = DefaultRouter()

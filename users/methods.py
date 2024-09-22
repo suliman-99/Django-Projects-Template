@@ -1,9 +1,10 @@
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth.models import Permission
 from django.utils import timezone
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from common.code_generation import generate_code
+from common.code_generation import generate_string_code
 from translation.methods import get_languages_codes, get_default_language_code
-from users.models import User
+from .models import User
 
 
 def save_user(user: User, save: bool):
@@ -30,7 +31,7 @@ def login(user: User, save: bool = True):
 
 
 def verify(user: User, save: bool = True):
-    reset_password_code = generate_code(20)
+    reset_password_code = generate_string_code(20)
     user.reset_password_code = make_password(reset_password_code)
     user.reset_password_code_time = timezone.now()
     user.reset_password_code_is_valid = True
@@ -65,3 +66,7 @@ def verify_phone_number(user: User, save: bool = True):
 
 def get_user_language_code(user: User):
     return user.language_code if user.language_code in get_languages_codes() else get_default_language_code()
+
+
+def get_permission_full_name(permission: Permission):
+        return f'{permission.content_type.app_label}.{permission.codename}'

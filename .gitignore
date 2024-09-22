@@ -8,8 +8,8 @@ media/*
 !media/seeders
 
 # to ignore the migrations just un-comment these two lines
-# */migrations/*
-# !*/migrations/__init__.py
+*/migrations/*
+!*/migrations/__init__.py
 
 # -------------------------- Django Stuff --------------------------------
 
