@@ -8,5 +8,5 @@ class SchedulerConfig(AppConfig):
 
     def ready(self) -> None:
         if not 'makemigrations' in sys.argv and not 'migrate' in sys.argv:
-            from scheduler import schedular
+            from . import schedular
             schedular.start()
