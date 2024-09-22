@@ -2,23 +2,40 @@ from django.contrib import admin
 from common.audit.admin import AuditModelAdmin
 from common.audit.variables import audit_fields
 from translation.methods import full_translate
-from test_app.models import TestTimeModel, Test, SubTest
+from .models import TestTimeModel, Test, SubTest
 
 
 @admin.register(Test)
 class TestAdmin(AuditModelAdmin):
     list_display = (
         'id',
+        'bool',
+        'num',
+        'date',
+        'time',
+        'datetime',
+        'duration',
         *full_translate('text'),
         'un',
         *audit_fields,
     )
     list_filter = (
+        'bool',
+        'num',
+        'date',
+        'time',
+        'datetime',
+        'duration',
         *full_translate('text'),
         'un',
         *audit_fields,
     )
     search_fields = (
+        'id',
+        'date',
+        'time',
+        'datetime',
+        'duration',
         *full_translate('text'),
         'un',
     )
@@ -36,10 +53,12 @@ class SubtestAdmin(AuditModelAdmin):
         *audit_fields,
     )
     list_filter = (
-        'text',
+        'test',
         *audit_fields,
     )
     search_fields = (
+        'id',
+        'test_id',
         'text',
     )
     ordering = (
@@ -48,7 +67,7 @@ class SubtestAdmin(AuditModelAdmin):
 
 
 @admin.register(TestTimeModel)
-class TestTimeModelAdmin(admin.ModelAdmin):
+class TestTimeModelAdmin(AuditModelAdmin):
     list_display = (
         'id',
         'created_at', 
@@ -61,6 +80,7 @@ class TestTimeModelAdmin(admin.ModelAdmin):
         'timezone_localtime_timezone_now',
     )
     search_fields = (
+        'id',
         'created_at', 
         'timezone_now', 
         'timezone_localtime_timezone_now',

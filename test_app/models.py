@@ -28,7 +28,6 @@ class SubTest(HistoricalAuditModel):
     text = models.CharField(max_length=100)
 
 
-class TestTimeModel(models.Model):
-    created_at = models.DateTimeField(auto_now_add=True)
+class TestTimeModel(HistoricalAuditModel):
     timezone_now = models.DateTimeField()
     timezone_localtime_timezone_now = models.DateTimeField()

@@ -1,6 +1,6 @@
 from modeltranslation.translator import register, TranslationOptions
 import simple_history
-from test_app.models import Test
+from .models import Test
 
 
 @register(Test)

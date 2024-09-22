@@ -1,6 +1,6 @@
 from django.urls import path
 from rest_framework import routers
-from test_app.views import (
+from .views import (
     TestSendEmailVerificationCode,
     TestSendPhoneNumberVerificationCode,
     TestVerifyPhoneNumber,

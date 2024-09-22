@@ -1,12 +1,13 @@
 from django.utils import timezone
 from rest_framework import serializers
+from common.audit.serializer import AuditSerializer
 from translation.methods import translate, translation_field_required_kwargs
 from translation.fields import UpdateTranslationField
 from translation.plugs import JsonTranslationPlug
-from test_app.models import TestTimeModel, Test, SubTest
+from .models import TestTimeModel, Test, SubTest
 
 
-class UpdateTestSerializer(serializers.ModelSerializer):
+class UpdateTestSerializer(AuditSerializer):
     class Meta:
         model = Test
         fields = (
@@ -43,7 +44,7 @@ class ByFieldUpdateTestSerializer(JsonTranslationPlug, serializers.ModelSerializ
     text = UpdateTranslationField(base_is_enough=True)
 
 
-class GetTestSerializer(serializers.ModelSerializer):
+class GetTestSerializer(AuditSerializer):
     class Meta:
         model = Test
         fields = (
@@ -59,7 +60,7 @@ class GetTestSerializer(serializers.ModelSerializer):
         )
 
 
-class SubTestSerializer(serializers.ModelSerializer):
+class SubTestSerializer(AuditSerializer):
     class Meta:
         model = SubTest
         fields = (
@@ -69,7 +70,7 @@ class SubTestSerializer(serializers.ModelSerializer):
         )
 
 
-class TestTimeModelSerializer(serializers.ModelSerializer):
+class TestTimeModelSerializer(AuditSerializer):
     class Meta:
         model = TestTimeModel
         fields = (
