@@ -1,6 +1,6 @@
 from modeltranslation.translator import register, TranslationOptions
 import simple_history
-from system_info.models import SystemInfo
+from .models import SystemInfo
 
 
 @register(SystemInfo)

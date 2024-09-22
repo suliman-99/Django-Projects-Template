@@ -1,7 +1,7 @@
 from rest_framework.generics import CreateAPIView, RetrieveAPIView
 from common.rest_framework.permissions import IsAdmin
-from system_info.models import SystemInfo
-from system_info.serializers import AdminSystemInfoSerializer, SystemInfoSerializer
+from .models import SystemInfo
+from .serializers import AdminSystemInfoSerializer, SystemInfoSerializer
 
 
 class AdminSystemInfoView(RetrieveAPIView, CreateAPIView):

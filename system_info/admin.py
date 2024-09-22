@@ -3,7 +3,7 @@ from common.audit.admin import AuditModelAdmin
 from common.audit.variables import audit_fields
 from common.singleton_model.admin import SingletonModelAdmin
 from translation.methods import full_translate
-from system_info.models import SystemInfo
+from .models import SystemInfo
 
 
 @admin.register(SystemInfo)

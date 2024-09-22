@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from translation.methods import translate
-from system_info.models import SystemInfo
+from .models import SystemInfo
 
 
 class AdminSystemInfoSerializer(serializers.ModelSerializer):
