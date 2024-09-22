@@ -1,8 +1,8 @@
 from django.contrib.auth.models import Permission
 from rest_framework.viewsets import ModelViewSet
 from common.rest_framework.permissions import ModelPermissions, IsAdmin, IsSuperuser
-from users.filters import PermissionFilter
-from users.serializers.permission import PermissionSerializer
+from ..filters import PermissionFilter
+from ..serializers.permission import PermissionSerializer
 
 
 class PermissionViewSet(ModelViewSet):

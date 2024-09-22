@@ -1,7 +1,7 @@
-from rest_framework import serializers
 from django.contrib.auth.models import Group
-from users.serializers.permission import PermissionSerializer
-from users.serializers.user.nested import SmallUserSerializer
+from rest_framework import serializers
+from ..permission import PermissionSerializer
+from ..user.nested import SmallUserSerializer
 
 
 class GetFullGroupSerializer(serializers.ModelSerializer):

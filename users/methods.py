@@ -4,7 +4,7 @@ from django.utils import timezone
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from common.code_generation import generate_string_code
 from translation.methods import get_languages_codes, get_default_language_code
-from users.models import User
+from .models import User
 
 
 def save_user(user: User, save: bool):

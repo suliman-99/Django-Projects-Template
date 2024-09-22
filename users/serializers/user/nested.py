@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from users.models import User
+from ...models import User
 
 # this is for displaying the user data for the admin
 class SmallUserSerializer(serializers.ModelSerializer):

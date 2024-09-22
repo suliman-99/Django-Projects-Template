@@ -5,12 +5,12 @@ from django.contrib.auth.hashers import check_password, make_password
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError, AuthenticationFailed
 from rest_framework_simplejwt.tokens import RefreshToken
-from users.models import User
-from users.validators import validate_user, validate_user_code
-from users.methods import get_tokens
-from users.serializers.auth.base import AuthUserSerializer
-from users.verification.email import send_verification_code_email_message_to_user
-from users.verification.phone_number import send_verification_code_phone_number_message_to_user
+from ...models import User
+from ...validators import validate_user, validate_user_code
+from ...methods import get_tokens
+from ...verification.email import send_verification_code_email_message_to_user
+from ...verification.phone_number import send_verification_code_phone_number_message_to_user
+from .base import AuthUserSerializer
 
 
 class SignUpSerializer(serializers.ModelSerializer):

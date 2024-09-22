@@ -1,7 +1,7 @@
 from django.contrib.auth.models import Group
 from rest_framework.viewsets import ModelViewSet
 from common.rest_framework.permissions import ModelPermissions, IsAdmin, IsSuperuser
-from users.serializers.group.main import (
+from ..serializers.group.main import (
     GetFullGroupSerializer,
     UpdateFullGroupSerializer,
 )

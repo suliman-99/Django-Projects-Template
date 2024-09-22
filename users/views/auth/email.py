@@ -1,12 +1,12 @@
 
 from rest_framework.generics import UpdateAPIView
-from users.views.auth.base import BaseAuthView
-from users.serializers.auth.email import (
+from ...serializers.auth.email import (
     ChangeEmailSerializer,
     SendEmailVerificationCodeSerializer,
     VerifyEmailSerializer,
     EmailLogInSerializer,
 )
+from .base import BaseAuthView
 
 
 class ChangeEmailView(UpdateAPIView):

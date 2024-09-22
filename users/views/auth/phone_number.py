@@ -1,11 +1,11 @@
 from rest_framework.generics import UpdateAPIView
-from users.views.auth.base import BaseAuthView
-from users.serializers.auth.phone_number import (
+from ...serializers.auth.phone_number import (
     ChangePhoneNumberSerializer,
     SendPhoneNumberVerificationCodeSerializer,
     VerifyPhoneNumberSerializer,
     PhoneNumberLogInSerializer,
 )
+from .base import BaseAuthView
 
 
 class ChangePhoneNumberView(UpdateAPIView):

@@ -1,13 +1,13 @@
 from rest_framework.generics import RetrieveAPIView, UpdateAPIView
 from rest_framework.permissions import IsAuthenticated
-from users.views.auth.base import BaseAuthView
-from users.serializers.auth.common import (
+from ...serializers.auth.common import (
     SignUpSerializer,
     RefreshSerializer,
     ChangePasswordSerializer,
     ReSetPasswordSerializer,
     UpdateProfileSerializer,
 )
+from .base import BaseAuthView
 
 
 class SignUpView(BaseAuthView):

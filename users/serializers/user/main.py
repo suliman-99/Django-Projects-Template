@@ -1,9 +1,9 @@
 from django.contrib.auth.hashers import make_password
 from rest_framework import serializers
 from common.audit.variables import audit_fields
-from users.models import User
-from users.serializers.group.nested import SmallGroupSerializer
-from users.serializers.permission import PermissionSerializer
+from ...models import User
+from ..group.nested import SmallGroupSerializer
+from ..permission import PermissionSerializer
 
 
 class GetFullUserSerializer(serializers.ModelSerializer):

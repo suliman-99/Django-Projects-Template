@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from users.models import User
-from users.serializers.group.nested import SmallGroupSerializer
+from ...models import User
+from ..group.nested import SmallGroupSerializer
 
 
 class AuthUserSerializer(serializers.ModelSerializer):

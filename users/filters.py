@@ -1,7 +1,7 @@
 from django.contrib.auth.models import Permission
 from django_filters import rest_framework as filters
 from common.rest_framework.filters import FilterLookupExpr
-from users.models import User
+from .models import User
 
 
 class PermissionFilter(filters.FilterSet):

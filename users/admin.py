@@ -3,9 +3,9 @@ from django.contrib.auth.admin import UserAdmin, GroupAdmin
 from django.contrib.auth.models import Permission, Group
 from common.audit.admin import AuditModelAdmin
 from common.audit.variables import audit_fields
-from users.models import User
-from users.forms import CustomAuthenticationForm
-from users.methods import get_permission_full_name
+from .models import User
+from .forms import CustomAuthenticationForm
+from .methods import get_permission_full_name
 
 
 admin.site.login_form = CustomAuthenticationForm

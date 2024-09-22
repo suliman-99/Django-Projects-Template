@@ -3,15 +3,15 @@ from django.contrib.auth.hashers import check_password
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-from users.models import User
-from users.validators import validate_phone_number_login
-from users.methods import login, verify_phone_number
-from users.serializers.auth.base import AuthUserSerializer
-from users.common_error_messages import NOT_REGISTERED_USER, INCORRECT_LOGIN_DATA, INVALID_CODE
-from users.verification.phone_number import (
+from ...models import User
+from ...validators import validate_phone_number_login
+from ...methods import login, verify_phone_number
+from ...common_error_messages import NOT_REGISTERED_USER, INCORRECT_LOGIN_DATA, INVALID_CODE
+from ...verification.phone_number import (
     send_verification_code_phone_number_message_to_user,
     check_verification_code_phone_number_to_user,
 )
+from ..auth.base import AuthUserSerializer
 
 
 class ChangePhoneNumberSerializer(serializers.ModelSerializer):

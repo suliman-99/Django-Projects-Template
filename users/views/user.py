@@ -1,8 +1,8 @@
 from rest_framework.viewsets import ModelViewSet
 from common.rest_framework.permissions import ModelPermissions, IsAdmin, IsSuperuser
-from users.models import User
-from users.filters import UserFilter
-from users.serializers.user.main import (
+from ..models import User
+from ..filters import UserFilter
+from ..serializers.user.main import (
     GetFullUserSerializer,
     UpdateFullUserSerializer,
 )

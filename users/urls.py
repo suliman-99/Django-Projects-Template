@@ -1,22 +1,22 @@
 from django.urls import path
 from rest_framework import routers
-from users.views.permission import PermissionViewSet
-from users.views.group import GroupViewSet
-from users.views.user import UserViewSet
-from users.views.auth.common import (
+from .views.permission import PermissionViewSet
+from .views.group import GroupViewSet
+from .views.user import UserViewSet
+from .views.auth.common import (
     SignUpView,
     ProfileView,
     RefreshView,
     ChangePasswordView,
     ReSetPasswordView,
 )
-from users.views.auth.email import (
+from .views.auth.email import (
     ChangeEmailView,
     SendEmailVerificationCodeView,
     VerifyEmailView,
     EmailLogInView,
 )
-from users.views.auth.phone_number import (
+from .views.auth.phone_number import (
     ChangePhoneNumberView,
     SendPhoneNumberVerificationCodeView,
     VerifyPhoneNumberView,

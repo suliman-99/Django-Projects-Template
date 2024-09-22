@@ -1,7 +1,7 @@
 from django.contrib.auth.models import Permission
 from rest_framework import serializers
 from content_type.serializers import ContentTypeSerializer
-from users.methods import get_permission_full_name
+from ..methods import get_permission_full_name
 
 
 class PermissionSerializer(serializers.ModelSerializer):

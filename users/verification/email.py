@@ -5,7 +5,7 @@ from django.conf import settings
 from django.template.loader import render_to_string
 from django.contrib.auth.hashers import make_password
 from common.code_generation import generate_string_code
-from users.models import User
+from ..models import User
 
 
 def generate_email_verification_code():

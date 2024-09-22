@@ -1,7 +1,7 @@
 import threading
 from django.conf import settings
 from twilio.rest import Client
-from users.models import User
+from ..models import User
 
 
 def _send_verification_code_phone_number_message(to_phone_number):
