@@ -1,5 +1,5 @@
 from rest_framework import routers
-from seeder.apis.views import AppliedSeederViewSet, RegisteredSeederViewSet
+from .apis.views import AppliedSeederViewSet, RegisteredSeederViewSet
 
 router = routers.DefaultRouter()
 

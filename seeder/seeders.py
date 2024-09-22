@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django_seeding import seeders
 from django_seeding.seeder_registry import SeederRegistry
-from seeder.serializers import (
+from .serializers import (
     SuperUserSeederSerializer,
 )
 
