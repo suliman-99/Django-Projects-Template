@@ -6,7 +6,7 @@ class SingletonModel():
         instance = self.__class__.objects.filter().first()
         if instance and instance.id != self.id:
             for field in self._meta.fields:
-                if field.name not in ['id', 'pk']:
+                if field.name not in ('id', 'pk'):
                     setattr(instance, field.name, getattr(self, field.name))
             instance.save()
             return
