@@ -10,7 +10,17 @@ class NotificationFilter(filters.FilterSet):
         fields = {
             'id': FilterLookupExpr.OTHER,
             'user': FilterLookupExpr.OTHER,
-            'is_viewed': FilterLookupExpr.BOOLEAN,
+            'role': FilterLookupExpr.OTHER,
+
             **full_translate('title', FilterLookupExpr.STRING),
             **full_translate('body', FilterLookupExpr.STRING),
+
+            'object_type': FilterLookupExpr.OTHER,
+            'object_id': FilterLookupExpr.OTHER,
+
+            'is_viewed': FilterLookupExpr.BOOLEAN,
+
+            'created_at': FilterLookupExpr.DATETIME,
+            'updated_at': FilterLookupExpr.DATETIME,
+            'deleted': FilterLookupExpr.DATETIME,
         }

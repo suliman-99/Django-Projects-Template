@@ -1,12 +1,11 @@
 from rest_framework import routers
-from fcm_django.api.rest_framework import FCMDeviceAuthorizedViewSet
-from .views import NotificationViewSet, MyNotificationViewSet
+from .views import NotificationViewSet, MyNotificationViewSet, NotificationTemplateViewSet
 
 
 router = routers.DefaultRouter()
 
-router.register('devices', FCMDeviceAuthorizedViewSet, 'devices')
 router.register('notifications', NotificationViewSet, 'notifications')
 router.register('my-notifications', MyNotificationViewSet, 'my-notifications')
+router.register('notification-templates', NotificationTemplateViewSet, 'notification-templates')
 
 urlpatterns = router.urls

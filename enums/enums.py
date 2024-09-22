@@ -28,3 +28,11 @@ class Gender(BaseIntEnum):
 class FCMType(BaseIntEnum):
     NOTIFICATION = 1
     MESSAGE = 2
+
+
+class NotificationObjectType(BaseIntEnum):
+    TYPE = 1
+
+
+class NotificationTemplateType(BaseIntEnum):
+    TYPE = 1

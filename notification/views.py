@@ -4,12 +4,13 @@ from rest_framework import permissions
 from rest_framework.response import Response
 from common.rest_framework.permissions import ModelPermissions, IsAdmin, IsSuperuser
 from common.rest_framework.pagination import CustomLimitOffsetPagination
-from .models import Notification
+from .models import Notification, NotificationTemplate
 from .filters import NotificationFilter
 from .serializers import (
     SendNotificationSerializer,
     GetNotificationSerializer,
     FullNotificationSerializer,
+    NotificationTemplateSerializer,
 )
 
 
@@ -21,6 +22,7 @@ class NotificationViewSet(viewsets.ModelViewSet):
     search_fields = (
         'title',
         'body',
+        'extra_data',
     )
     ordering_fields = (
         'is_viewed',
@@ -72,6 +74,12 @@ class MyNotificationViewSet(viewsets.ModelViewSet):
     
     @action(detail=False, methods=['put'], url_path='mark-all-as-viewed')
     def mark_all_as_viewed(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset())
-        queryset.filter(is_viewed=False).update(is_viewed=True)
+        self.get_queryset().filter(is_viewed=False).update(is_viewed=True)
         return Response({})
+
+
+class NotificationTemplateViewSet(viewsets.ModelViewSet):
+    permission_models = NotificationTemplate
+    permission_classes = (IsAdmin, ModelPermissions)
+    queryset = NotificationTemplate.objects.all()
+    serializer_class = NotificationTemplateSerializer
