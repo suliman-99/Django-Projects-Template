@@ -2,7 +2,7 @@ from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.contrib.auth import get_user_model
 from notification.methods import default_translated_push_notifications
-from feedback.models import Feedback
+from ..models import Feedback
 
 
 User = get_user_model()

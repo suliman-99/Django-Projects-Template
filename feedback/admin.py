@@ -1,7 +1,7 @@
 from django.contrib import admin
 from common.audit.admin import AuditModelAdmin
 from common.audit.variables import audit_fields
-from feedback.models import Feedback
+from .models import Feedback
 
 
 @admin.register(Feedback)

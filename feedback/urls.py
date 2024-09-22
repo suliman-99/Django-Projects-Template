@@ -1,5 +1,5 @@
 from rest_framework import routers
-from feedback.views import FeedbackViewSet, AdminFeedbackViewSet
+from .views import FeedbackViewSet, AdminFeedbackViewSet
 
 router = routers.DefaultRouter()
 
