@@ -4,4 +4,4 @@ from .added_validators import AddedValidatorsPlug
 
 
 class PNGField(AddedValidatorsPlug, CustomFileField):
-    added_validators = (validators.FileExtensionValidator(['svg']), )
+    added_validators = (validators.FileExtensionValidator(['png']), )

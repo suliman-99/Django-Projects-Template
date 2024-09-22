@@ -1,5 +1,6 @@
 from django.db import models
 from django.core import validators
+from .added_validators import AddedValidatorsPlug
 
 
 class CustomDecimalField(models.DecimalField):
@@ -15,15 +16,5 @@ class CustomDecimalField(models.DecimalField):
         return name, path, args, kwargs
 
 
-class PriceField(CustomDecimalField):
-    def __init__(self, *args, **kwargs) -> None:
-        kwargs.setdefault('validators', []).append(validators.MinValueValidator(0))
-        super().__init__(*args, **kwargs)
-
-    def deconstruct(self):
-        name, path, args, kwargs = super().deconstruct()
-        for validator in kwargs.get('validators', []):
-            if isinstance(validator, validators.MinValueValidator) and validator.limit_value == 0:
-                kwargs['validators'].remove(validator)
-                break
-        return name, path, args, kwargs
+class PositiveDecimalField(AddedValidatorsPlug, CustomDecimalField):
+    added_validators = (validators.MinValueValidator(0), )
