@@ -9,7 +9,8 @@ PAGINATION_FLAG = '__IS_PAGINATED_RESPONSE__'
 class CustomPageNumberPagination(pagination.PageNumberPagination):
     page_size = 10
     max_page_size = 1000
-    page_size_query_param = 'page_size'
+    page_size_query_param = 'pagination_page_size'
+    page_query_param = 'pagination_page'
 
     def get_page_number(self, request, paginator):
         self.page_number = super().get_page_number(request, paginator)
