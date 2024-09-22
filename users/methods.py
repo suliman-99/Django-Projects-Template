@@ -2,7 +2,7 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import Permission
 from django.utils import timezone
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from common.code_generation import generate_code
+from common.code_generation import generate_string_code
 from translation.methods import get_languages_codes, get_default_language_code
 from users.models import User
 
@@ -31,7 +31,7 @@ def login(user: User, save: bool = True):
 
 
 def verify(user: User, save: bool = True):
-    reset_password_code = generate_code(20)
+    reset_password_code = generate_string_code(20)
     user.reset_password_code = make_password(reset_password_code)
     user.reset_password_code_time = timezone.now()
     user.reset_password_code_is_valid = True
