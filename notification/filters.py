@@ -1,7 +1,7 @@
 from django_filters import rest_framework as filters
 from common.rest_framework.filters import FilterLookupExpr
 from translation.methods import full_translate
-from notification.models import Notification
+from .models import Notification
 
 
 class NotificationFilter(filters.FilterSet):

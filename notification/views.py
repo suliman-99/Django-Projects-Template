@@ -4,9 +4,9 @@ from rest_framework import permissions
 from rest_framework.response import Response
 from common.rest_framework.permissions import ModelPermissions, IsAdmin, IsSuperuser
 from common.rest_framework.pagination import CustomLimitOffsetPagination
-from notification.models import Notification
-from notification.filters import NotificationFilter
-from notification.serializers import (
+from .models import Notification
+from .filters import NotificationFilter
+from .serializers import (
     SendNotificationSerializer,
     GetNotificationSerializer,
     FullNotificationSerializer,

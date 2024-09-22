@@ -1,6 +1,6 @@
 from modeltranslation.translator import register, TranslationOptions
 import simple_history
-from notification.models import Notification
+from .models import Notification
 
 
 @register(Notification)

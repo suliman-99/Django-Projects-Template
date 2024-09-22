@@ -5,7 +5,7 @@ from fcm_django.models import FCMDevice
 from translation.methods import get_default_language_code
 from translation.fields import UpdateTranslationField
 from translation.plugs import JsonTranslationPlug
-from notification.models import Notification
+from .models import Notification
 
 
 User = get_user_model()

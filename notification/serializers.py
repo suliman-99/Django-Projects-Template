@@ -3,8 +3,8 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from common.audit.variables import audit_fields, audit_read_only_kwargs
 from translation.methods import full_translate
-from notification.models import Notification
-from notification.methods import push_notifications
+from .models import Notification
+from .methods import push_notifications
 
 
 User = get_user_model()

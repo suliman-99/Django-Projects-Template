@@ -1,6 +1,6 @@
 from rest_framework import routers
 from fcm_django.api.rest_framework import FCMDeviceAuthorizedViewSet
-from notification.views import NotificationViewSet, MyNotificationViewSet
+from .views import NotificationViewSet, MyNotificationViewSet
 
 
 router = routers.DefaultRouter()

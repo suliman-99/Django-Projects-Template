@@ -2,7 +2,7 @@ from django.contrib import admin
 from common.audit.admin import AuditModelAdmin
 from common.audit.variables import audit_fields
 from translation.methods import full_translate
-from notification.models import Notification
+from .models import Notification
 
 
 @admin.register(Notification)
