@@ -1,5 +1,5 @@
 from django.urls import path
-from logger.views import LogListAPIView
+from .views import LogListAPIView
 
 
 urlpatterns = [

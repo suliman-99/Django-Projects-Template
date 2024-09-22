@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.db import models
 from django.contrib.admin.widgets import AdminTextareaWidget
-from logger.models import Log
+from .models import Log
 
 
 @admin.register(Log)
