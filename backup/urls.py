@@ -1,5 +1,5 @@
 from django.urls import path
-from backup.views import Backup
+from .views import Backup
 
 
 urlpatterns = [
