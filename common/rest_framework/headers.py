@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.conf import settings
 from rest_framework.exceptions import NotAcceptable
 
@@ -81,3 +82,16 @@ def validate_and_coordinate_request_headers(request):
     request.app_version = validate_app_version(headers.get('app-version'))
     
 # -------------------------------------------------------------------------------------------------
+
+class HeaderValidationMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        if request.path.startswith('/api/'):
+            try:
+                validate_and_coordinate_request_headers(request)
+            except BaseException as e:
+                return JsonResponse({ 'detail': str(e) }, status=e.status_code)
+        
+        return self.get_response(request)
