@@ -1,4 +1,4 @@
-from .base.enum import BaseIntEnum
+from .base.enum import BaseIntEnum, BaseEnum
 
 
 class Status(BaseIntEnum):
@@ -23,3 +23,8 @@ class Role(BaseIntEnum):
 class Gender(BaseIntEnum):
     MALE = 1
     FEMALE = 2
+
+
+class FCMType(BaseIntEnum):
+    NOTIFICATION = 1
+    MESSAGE = 2

@@ -3,6 +3,7 @@ from .enums import (
     OsType, 
     Role,
     Gender,
+    FCMType,
 )
 
 
@@ -16,3 +17,7 @@ class RoleReadOnlyViewSet(EnumReadOnlyViewSet):
 
 class GenderReadOnlyViewSet(EnumReadOnlyViewSet):
     enum = Gender
+
+
+class FCMTypeReadOnlyViewSet(EnumReadOnlyViewSet):
+    enum = FCMType
