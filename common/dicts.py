@@ -1,3 +1,5 @@
+
+
 class DefaultDict(dict):
     def __init__(self, default=None, initial_dict={}):
         super().__init__()
@@ -14,7 +16,3 @@ class DefaultDict(dict):
         if default is None:
             default = self.default
         return super().get(key, default)
-
-
-
-
