@@ -1,4 +1,6 @@
 from collections.abc import Iterable
+from django.utils import timezone
+from rest_framework import exceptions
 from rest_framework import permissions
 
 
@@ -106,6 +108,14 @@ class IsAdminOrReadOnly(permissions.BasePermission):
             request.method in permissions.SAFE_METHODS or
             request.user.is_authenticated and
             request.user.is_admin
+        )
+
+
+class HasVerifiedPhoneNumber(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return bool(
+            request.user.is_authenticated and
+            request.user.phone_number_verified
         )
 
 

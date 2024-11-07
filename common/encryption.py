@@ -7,7 +7,7 @@ from cryptography.fernet import Fernet
 def generate_fernet_key():
     # Generate a 256-bit (32-byte) random key
     fernet_key = hashlib.sha256(base64.urlsafe_b64encode(secrets.token_bytes(32))).digest()
-    print(base64.urlsafe_b64encode(fernet_key).decode())
+    fernet_key = base64.urlsafe_b64encode(fernet_key).decode()
     return fernet_key
 
 
@@ -28,10 +28,13 @@ def decrypt(encrypted_data: str, key: str) -> str:
     return decrypted_data
 
 
-if __name__ == '__main__':
-    key = 'L4eZ-2YU3g1yetyaCuv1Y7QQ1OoKL4J9flRYAYp-OH0='
-    data = 'Important Sensitive Data'
+def main():
+    # key = 'L4eZ-2YU3g1yetyaCuv1Y7QQ1OoKL4J9flRYAYp-OH0='
+    key = generate_fernet_key()
     print('------------------------------------------------------------------------------')
+    print(key)
+    print('------------------------------------------------------------------------------')
+    data = 'Important Sensitive Data'
     print(type(data))
     print(data)
     print('------------------------------------------------------------------------------')
@@ -43,3 +46,7 @@ if __name__ == '__main__':
     print(type(decrypted_data))
     print(decrypted_data)
     print('------------------------------------------------------------------------------')
+
+
+if __name__ == '__main__':
+    main()

@@ -1,4 +1,5 @@
 
+
 def cast_to_bool(value: str) -> bool:
     if value is None:
         return None
