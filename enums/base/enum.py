@@ -1,4 +1,14 @@
-from enum import Enum, IntEnum
+from enum import EnumMeta, Enum, IntEnum
+
+
+class EnumExtensionMeta(EnumMeta):
+    def __getattribute__(self, name):
+        ret = super().__getattribute__(name)
+        if isinstance(ret, IntEnum):
+            ret = int(ret)
+        if isinstance(ret, Enum):
+            ret = ret.value
+        return ret
 
 
 def to_normal_case(s):
@@ -33,9 +43,9 @@ class EnumExtension:
         return hash(self.value)
 
 
-class BaseEnum(EnumExtension, Enum):
+class BaseEnum(EnumExtension, Enum, metaclass=EnumExtensionMeta):
     pass
 
 
-class BaseIntEnum(EnumExtension, IntEnum):
+class BaseIntEnum(EnumExtension, IntEnum, metaclass=EnumExtensionMeta):
     pass
