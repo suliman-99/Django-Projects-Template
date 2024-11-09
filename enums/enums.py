@@ -1,6 +1,12 @@
 from .base.enum import BaseIntEnum, BaseEnum
 
 
+class DeleteStatus(BaseEnum):
+    ALL = 'all'
+    DELETED = 'deleted'
+    NOT_DELETED = 'not_deleted'
+
+
 class Status(BaseIntEnum):
     ACTIVE = 1
     INACTIVE = 0
