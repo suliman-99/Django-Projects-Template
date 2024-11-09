@@ -1,8 +1,10 @@
 from django.contrib import admin
 from django.db import models
+from django.http import HttpResponseRedirect
 from django.utils.translation import gettext_lazy as _
 from simple_history.admin import SimpleHistoryAdmin
 from safedelete.admin import SafeDeleteAdmin
+from enums.enums import DeleteStatus
 
 
 class FieldsGetterMixin:
@@ -114,24 +116,33 @@ class FieldsGetterMixin:
 
 class SafeDeleteMixin(SafeDeleteAdmin):
     class DeletedFilter(admin.SimpleListFilter):
-        title = _('deleted')
-        parameter_name = 'deleted'
+        title = _('delete status')
+        parameter_name = 'delete_status'
 
         def lookups(self, request, model_admin):
-            return (
-                ('not_deleted', _('Not Deleted')),
-                ('deleted', _('Deleted')),
-                ('both', _('Both')),
-            )
-
+            return DeleteStatus.choices
+        
+        def choices(self, changelist):
+            for i, o in enumerate(super().choices(changelist)):
+                if i:
+                    yield o
+        
         def queryset(self, request, queryset):
             value = self.value()
-            if not value or value == 'not_deleted':
-                return queryset.filter(deleted__isnull=True)
-            elif value == 'deleted':
-                return queryset.exclude(deleted__isnull=True)
-            elif value == 'all':
+            if value == DeleteStatus.ALL:
                 return queryset
+            elif value == DeleteStatus.NOT_DELETED:
+                return queryset.filter(deleted__isnull=True)
+            elif value == DeleteStatus.DELETED:
+                return queryset.exclude(deleted__isnull=True)
+
+    def changelist_view(self, request, extra_context=None):
+        if self.DeletedFilter.parameter_name not in request.GET:
+            query = request.GET.copy()
+            query[self.DeletedFilter.parameter_name] = DeleteStatus.NOT_DELETED
+            return_url = f"{request.path}?{query.urlencode()}"
+            return HttpResponseRedirect(return_url)
+        return super().changelist_view(request, extra_context=extra_context)
     
     def get_queryset(self, request):
         return self.model.all_objects.all()
