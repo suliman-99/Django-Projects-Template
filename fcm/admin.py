@@ -9,5 +9,5 @@ admin.site.unregister(FCMDevice)
 
 
 @admin.register(CustomFCMDevice)
-class CustomFCMDeviceAdmin(AuditModelAdmin, DeviceAdmin):
+class CustomFCMDeviceAdmin(DeviceAdmin):
     pass
