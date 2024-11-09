@@ -28,6 +28,7 @@ class UserAdmin(UserAdmin, AuditModelAdmin):
             },
         ),
     )
+    use_list_display_getter = False
     list_display = (
         'id',
         
@@ -57,6 +58,7 @@ class UserAdmin(UserAdmin, AuditModelAdmin):
         'language_code',
         *audit_fields,
     )
+    use_list_filter_getter = False
     list_filter = (
         'is_active',
         'is_staff',
@@ -84,6 +86,7 @@ class UserAdmin(UserAdmin, AuditModelAdmin):
         'language_code',
         *audit_fields,
     )
+    use_search_fields_getter = False
     search_fields = (
         'email',
 
@@ -92,9 +95,6 @@ class UserAdmin(UserAdmin, AuditModelAdmin):
         'first_name',
         'last_name',
         'language_code',
-    )
-    ordering = (
-        '-updated_at',
     )
     
 
